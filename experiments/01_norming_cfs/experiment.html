@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>
+      Language Experiment
+    </title><!--JS-->
+    <!-- external general utilities -->
+    <script src="shared/js/jquery-1.11.1.min.js"></script>
+    <script src="shared/full-projects/jquery-ui/jquery-ui.min.js"></script>
+    <script src="shared/js/underscore-min.js"></script>
+    
+    <!-- experiment logic -->
+    <script src="shared/js/exp-V2.js"></script>
+    <script src="shared/js/stream-V2.js"></script>
+
+    <!-- utilities to submit data to proliferate -->
+    <script src="https://proliferate.alps.science/static/js/proliferate.js"></script>
+
+    <!-- general utilities -->
+    <script src="shared/js/browserCheck.js"></script>
+    <script src="shared/js/utils.js"></script>
+    <link href="shared/full-projects/jquery-ui/jquery-ui.min.css" rel="stylesheet" type="text/css">
+    <link href="shared/css/cocolab-style.css" rel="stylesheet" type="text/css">
+    <link href="css/local-style.css" rel="stylesheet" type="text/css">
+
+    <!-- experiment file -->
+    <script src="js/experiment.js"></script>
+
+    <!-- stimulus file -->
+    <script src="js/stimuli.js"></script>
+  </head>
+
+  <body onload="init()">
+    <noscript>This task requires JavaScript.</noscript>
+    
+
+
+
+
+
+
+
+
+    <!-- initial slide -->
+    <div class="slide" id="i0">
+      <p class="left">
+        <br>
+        <br>
+        Welcome!
+        <br>
+        <br>
+        On the following screens, you will see pairs of people having small conversations, and you will be asked to answer some questions about things in their environment. It should take about !!! minutes in all.
+      </p>
+      <button id="start_button" type="button">Start</button>
+      <p class="left legal">
+        <strong><br>
+        <br>
+        <br>
+        LEGAL INFORMATION</strong>:<br>
+        <br>
+        We invite you to participate in a research study on language production and comprehension. Your experimenter will ask you to do a linguistic task such as reading sentences or words, naming pictures or describing scenes, making up sentences of your own, or participating in a simple language game.
+        <br>
+        <br>
+        There are no risks or benefits of any kind involved in this study.
+        <br>
+        <br>
+        You will be paid for your participation at the posted rate. If you have read this form and have decided to participate in this experiment, please understand your participation is voluntary and you have the right to withdraw your consent or discontinue participation at any time without penalty or loss of benefits to which you are otherwise entitled. You have the right to refuse to do particular tasks. Your individual privacy will be maintained in all published and written dataresulting from the study.
+        <br>
+        <br>
+        You may print this form for your records.
+       <br>
+        <br>
+        CONTACT INFORMATION: If you have any questions, concerns or complaints about this research study, its procedures, risks and benefits, you should contact the Protocol Director Meghan Sumner at (650)-725-9336.
+        <br>
+        <br>
+        If you are not satisfied with how this study is being conducted, or if you have any concerns, complaints, or general questions about the research or your rights as a participant, please contact the Stanford Institutional Review Board (IRB) to speak to someone independent of the research team at (650)-723-2480 or toll free at 1-866-680-2906. You can also write to the Stanford IRB, Stanford University, 3000 El Camino Real, Five Palo Alto Square, 4th Floor, Palo Alto, CA 94306 USA.
+        <br>
+        <br>
+        If you agree to participate, please proceed to the study tasks.
+      </p>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+    <!-- instruction slide -->
+    <div class="slide" id="instructions">
+      <p class="left">
+        <br>
+        <br>
+        Okay, let's get started.
+        <br>
+        <br>
+        On the following screens you'll see pairs of characters in certain places where one of them asks a question.
+        <br>
+        <br>
+        The other person responds based on what they are seeing.
+        <br>
+        <br>
+        Your task is to guess which thing the responding person is seeing. You do this by distributing ten coins across the options offered in the bottom half of the screen.
+        <br>
+        <br>
+        The more coins you give an option, the more likely you think that was the option the person responding to the question was looking at.
+      </p>
+      <div class="center">
+        <button id="continue_button" type="button" onclick="_s.button()">Continue</button>
+      </div>
+      </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+    <!-- trial slide -->
+    <div class="slide" id="trial">
+      <p style="text-align: left">
+        <br>
+        <br>
+        <table class="sidebyside" id="stable">
+          <tr>
+            <td class="structureleft">
+              <div class="picture"></div>
+            </td>
+            <td class="structureright">
+              <div class="prompt">
+                This is <span class="person1">{!!!}</span>.
+                <br>
+                <br>
+                Please give four different descriptors for <span class="person1">{!!!}</span>.
+              </div>
+              <div class="descriptor_boxes">
+                <p>
+                  <input type="text" id="desc1">
+                </p>
+                <p>
+                  <input type="text" id="desc2">
+                </p>
+                <p>
+                  <input type="text" id="desc3">
+                </p>
+                <p>
+                  <input type="text" id="desc4">
+                </p>
+                <p class="no_go">
+                  Please enter four different, complete descriptors to continue.
+                </p>
+                <button id="next_button" type="button" onclick="_s.next_button()">Next</button>
+              </div>
+              <br>
+              <div class="prompt2">
+                Now, give <span class="person1">{!!!}</span> a label.
+                <br>
+                <br>
+                <span class="person1">{!!!}</span> is a/an:
+              </div>
+              <div class="label_box">
+                <p>
+                  <input type="text" id="label_ans">
+                </p>
+                <p class="no_label">
+                  Please enter a label to continue.
+                </p>
+                <button id="continue_button" type="button" onclick="_s.continue_button()">Continue</button>
+              </div>
+            </td>
+          </tr>
+        </table>
+      </p>
+    </div>
+
+
+   
+
+
+
+
+
+
+
+
+    <!-- subject information slide -->
+    <div class="slide" id="subj_info">
+      <div class="long_form">
+        <div class="subj_info_title">
+          Additional information
+        </div>
+        <p class="info">
+          Answering these questions is optional, but will help us understand your answers.
+        </p>
+        <p>
+          Did you read the instructions and do you think you did the HIT correctly?
+        </p><label><input type="radio" name="assess" value="No">No</label> <label><input type="radio" name="assess" value="Yes">Yes</label> <label><input type="radio" name="assess" value="Confused">I was confused</label>
+        <p>
+          Gender: <select id="gender">
+            <option value="">
+            </option>
+            <option value="Male">
+              male
+            </option>
+            <option value="Female">
+              female
+            </option>
+            <option value="Other">
+              other
+            </option>
+          </select>
+        </p>
+        <p>
+          Age: <input type="text" id="age">
+        </p>
+        <p>
+          Level of education: <select id="education">
+            <option value="-1">
+            </option>
+            <option value="0">
+              Some high school
+            </option>
+            <option value="1">
+              Graduated high school
+            </option>
+            <option value="2">
+              Some college
+            </option>
+            <option value="3">
+              Graduated college
+            </option>
+            <option value="4">
+              Hold a higher degree
+            </option>
+          </select>
+        </p>
+        <p>
+          Native language: <input type="text" id="language">
+        </p><label>(the language(s) spoken at home when you were a child)</label>
+        <p>
+          Do you think the payment was fair?
+        </p><select id="fairprice">
+          <option value="-1">
+          </option>
+          <option value="0">
+            The payment was too low
+          </option>
+          <option value="1">
+            The payment was fair
+          </option>
+        </select>
+        <p>
+          Did you enjoy the experiment?
+        </p><select id="enjoyment">
+          <option value="-1">
+          </option>
+          <option value="0">
+            Worse than the average experiment
+          </option>
+          <option value="1">
+            An average experiment
+          </option>
+          <option value="2">
+            Better than average experiment
+          </option>
+        </select>
+        <p>
+          We would be interested in any comments you have about this experiment. Please type them here:
+        </p>
+        <textarea id="comments" rows="3" cols="50"></textarea><br>
+        <button onclick="_s.submit()">Submit</button>
+      </div>
+    </div>
+
+
+
+
+
+
+
+    <!-- final slide -->
+    <div id="thanks" class="slide js">
+      <p class="big">
+        Thanks for your time!
+      </p>
+    </div>
+
+
+
+
+
+
+    <!-- progress bar -->
+    <div class="progress">
+      <span>Progress:</span>
+      <div class="bar-wrapper">
+        <div class="bar" style="width: 0%"></div>
+      </div>
+    </div>
+  </body>
+</html>
