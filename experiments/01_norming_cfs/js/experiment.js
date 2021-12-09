@@ -252,7 +252,6 @@ function init() {
   //blocks of the experiment:
   exp.structure = [
     "i0",
-    "instructions",
     "trial",
     "subj_info",
     "thanks"
