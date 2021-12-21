@@ -20,6 +20,15 @@ function make_slides(f) {
   // set up instructions slide
   slides.instructions = slide({
     name: "instructions",
+    start: function() {
+      document.onkeydown = checkKey;
+      function checkKey(e) {
+        e = e || window.event;
+       if (e.keyCode==32){
+        _s.button();
+        }
+      }
+    },
     button: function() {
       exp.go();
     }
@@ -41,18 +50,11 @@ function make_slides(f) {
       $('.scenario').hide();
       $('.question').hide();
       $('.answer').hide();
-      $('.prompt1').hide();
-      $('#earliest').hide();
-      $('#latest').hide();
-      $('.prompt2').hide();
+      $('.phone_shirt').hide();
+      $('.prompt').hide();
       $('.person1_pic').hide();
       $('.person2_pic').hide();
-      $('.button').hide();
-      $('.tickmarks').hide();
-      $('#early').hide();
-      $('#late').hide();
-      $('#earliest').val("");
-      $('#latest').val("");
+      $('.space_msg_all').hide();
 
       exp.response = null
 
@@ -66,9 +68,8 @@ function make_slides(f) {
         $(".type").html(stim.type);
         console.log("type:", stim.type);
 
-        exp.item = stim.item;
-        $(".item").html(exp.item);
-        console.log("item:", exp.item);
+        $(".item").html(stim.item);
+        console.log("item:", stim.item);
 
         exp.current_char1 = exp.chars.shift();
         console.log("character 1:", exp.current_char1);
@@ -82,29 +83,14 @@ function make_slides(f) {
         $(".scenario").html(exp.scenario);
         console.log("scenario:", exp.scenario);
 
-        exp.question_bubble = '<img src="images/'+ exp.item + '.png'+'" style="height:150px">';
+        $(".question").html(stim.question);
+        console.log("question:", stim.question);
 
-        $(".question").html(exp.question_bubble);
-        console.log("question:", exp.question_bubble);
+        exp.time = exp.times.shift();
+        exp.answer = stim.answer.replace("TIME", exp.time);
 
-        exp.time_matrix = exp.times.shift();
-        exp.time_step_1 = exp.time_matrix.shift();
-        exp.time_step_2 = exp.time_matrix.shift();
-        exp.time_step_3 = exp.time_matrix.shift();
-        exp.time_step_4 = exp.time_matrix.shift();
-        exp.time = exp.time_matrix.shift();
-        exp.time_step_6 = exp.time_matrix.shift();
-        exp.time_step_7 = exp.time_matrix.shift();
-        exp.time_step_8 = exp.time_matrix.shift();
-        exp.time_step_9 = exp.time_matrix.shift();
-        
-
-        exp.bubble_time = exp.time.replace(":", ".")
-
-        exp.answer_bubble = '<img src="images/'+ exp.bubble_time + '.png'+'" style="height:150px">';
-
-        $(".answer").html(exp.answer_bubble);
-        console.log("answer:", exp.answer_bubble);
+        $(".answer").html(exp.answer);
+        console.log("answer:", exp.answer);
 
         exp.color = "none";
 
@@ -121,61 +107,19 @@ function make_slides(f) {
         $(".person2_pic").html(exp.person2_pic);
 
 
+        $(".phone_shirt").html('<img src="images/phone.png" style="height:250px">');
 
         exp.prompt = stim.prompt.replace("person2", exp.current_char2);
         exp.prompt = exp.prompt.replace("TIME", exp.time);
         exp.prompt = exp.prompt.replace("TIME", exp.time);
-        $(".prompt1").html(exp.prompt);
-
-        exp.prompt2 = stim.prompt2.replace("person2", exp.current_char2);
-        exp.prompt2 = exp.prompt2.replace("TIME", exp.time);
-        exp.prompt2 = exp.prompt2.replace("TIME", exp.time);
-        $(".prompt2").html(exp.prompt2);
-
-        $(".step_1").html(exp.time_step_1);
-        $(".step_2").html(exp.time_step_2);
-        $(".step_3").html(exp.time_step_3);
-        $(".step_4").html(exp.time_step_4);
-        $(".step_5").html(exp.time);
-        $(".step_6").html(exp.time_step_6);
-        $(".step_7").html(exp.time_step_7);
-        $(".step_8").html(exp.time_step_8);
-        $(".step_9").html(exp.time_step_9);
-
-        // var value = $('#earliest').val();
-        // $("#early").html(value)
-
-        // var value = $('#latest').val();
-        // $("#late").html(value)
-
-        var rangeslider_early = document.getElementById("earliest");
-        exp.output_early = document.getElementById("early");
-        exp.output_early.innerHTML = rangeslider_early.value;
-  
-        rangeslider_early.oninput = function() {
-          exp.output_early.innerHTML = this.value;
-        }
-
-        var rangeslider_late = document.getElementById("latest");
-        exp.output_late = document.getElementById("late");
-        exp.output_late.innerHTML = rangeslider_late.value;
-  
-        rangeslider_late.oninput = function() {
-          exp.output_late.innerHTML = this.value;
-        }
-
-
-        // rangeslider_early.value = 0;
-        // rangeslider_late.value = 0
-
+        $(".prompt").html(exp.prompt);
 
       } else {
 
         $(".type").html(stim.type);
         console.log("type:", stim.type)
 
-        exp.item = stim.item;
-        $(".item").html(exp.item);
+        $(".item").html(stim.item);
         console.log("item:", stim.item)
 
         exp.current_char1 = exp.chars.shift()
@@ -190,23 +134,13 @@ function make_slides(f) {
         $(".scenario").html(exp.scenario);
         console.log("scenario:", exp.scenario)
 
+        $(".question").html(stim.question);
+        console.log("question:", stim.question)
 
-
-
-        exp.question_bubble = '<img src="images/'+ exp.item + '.png'+'" style="height:150px">';
-
-        $(".question").html(exp.question_bubble);
-        console.log("question:", exp.question_bubble);
-
-        exp.color = exp.colors.shift();
-
-        exp.answer_bubble = '<img src="images/'+ exp.color + '.png'+'" style="height:150px">';
-
-        $(".answer").html(exp.answer_bubble);
-        console.log("answer:", exp.answer_bubble);
-
-
-
+        exp.color = exp.colors.shift()
+        exp.answer = stim.answer.replace("COLOR", exp.color)
+        $(".answer").html(exp.answer);
+        console.log("answer:", exp.answer)
 
         exp.time = "none";
 
@@ -223,52 +157,23 @@ function make_slides(f) {
         $(".person2_pic").html(exp.person2_pic);
 
 
+        $(".phone_shirt").html('<img src="images/phone.png" style="height:250px">');
+
+
         exp.prompt = stim.prompt.replace("person2", exp.current_char2);
         exp.prompt = exp.prompt.replace("COLOR", exp.color);
-        $(".prompt1").html(exp.prompt);
-
-        exp.prompt2 = stim.prompt2.replace("person2", exp.current_char2);
-        exp.prompt2 = exp.prompt2.replace("COLOR", exp.color);
-        $(".prompt2").html(exp.prompt2);
-
-        // $("#early").html($("#early").val());
-        // $("#late").html("50")
-
-
-        var rangeslider_early = document.getElementById("earliest");
-        exp.output_early = document.getElementById("early");
-        exp.output_early.innerHTML = rangeslider_early.value;
-  
-        rangeslider_early.oninput = function() {
-          exp.output_early.innerHTML = this.value;
-        }
-
-        var rangeslider_late = document.getElementById("latest");
-        exp.output_late = document.getElementById("late");
-        exp.output_late.innerHTML = rangeslider_late.value;
-  
-        rangeslider_late.oninput = function() {
-          exp.output_late.innerHTML = this.value;
-        }
-
-
+        $(".prompt").html(exp.prompt);
 
       }
 
       $('.scenario').show();
       $('.question').show();
       $('.answer').show();
+      $('.phone_shirt').show();
+      $('.prompt').show();
       $('.person1_pic').show();
       $('.person2_pic').show();
-      setTimeout(function() {
-        $('.prompt1').show();
-        $('.tickmarks').show();
-        $('#earliest').show();
-        $('.prompt2').show();
-        $('#latest').show();
-        $('.button').show();
-      }, 3000)
-      
+      $('.space_msg_all').show();
 
     },
 
@@ -284,12 +189,15 @@ function make_slides(f) {
         "item": this.stim.item,
         "name1": exp.current_char1,
         "name2": exp.current_char2,
-        "image1": exp.image1,
-        "image2": exp.image2,
+        "image1": exp.image,
+        "image2": exp.image,
         "time": exp.time,
         "color": exp.color,
-        "earliest": exp.output_early.innerHTML,
-        "latest": exp.output_late.innerHTML
+        "descriptor 1": $('#desc1').val(),
+        "descriptor 2": $('#desc2').val(),
+        "descriptor 3": $('#desc3').val(),
+        "descriptor 4": $('#desc4').val(),
+        "label": $('#label_ans').val()
       })
     }
 
@@ -425,15 +333,13 @@ function init() {
 
 
 
-  exp.fill_images = _.shuffle(["filler_girl1", "filler_girl2", "filler_girl3", "filler_girl4", "filler_guy1", "filler_guy2", "filler_guy3", "filler_guy4"])
+  exp.fill_images = _.shuffle(["fill1", "fill2", "fill3", "fill4", "fill5", "fill6", "fill7", "fill8"])
   console.log("fill image order:", exp.fill_images);
 
   // the above with four critical trials, only two character types in play, each character seen only once, speaking to another character of the same type; and four filler trials, only one character type in play, each character seen only once
 
 
-  exp.times = _.shuffle([["2:40", "2:45", "2:50", "2:55", "3:00", "3:05", "3:10", "3:15", "3:20"], ["1:10", "1:15", "1:20", "1:25", "1:30", "1:35", "1:40", "1:45", "1:50"], ["10:40", "10:45", "10:50", "10:55", "11:00", "11:05", "11:10", "11:15", "11:20"], ["9:10", "9:15", "9:20", "9:25", "9:30", "9:35", "9:40", "9:45", "9:50"]])
-  console.log("times order:", exp.times);
-
+  exp.times = _.shuffle(["3:00", "1:30", "11:00", "9:30"])
 
   exp.colors = _.shuffle(["blue", "red", "green", "yellow"])
 

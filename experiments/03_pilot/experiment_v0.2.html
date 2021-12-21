@@ -110,7 +110,8 @@
         The more coins you give an option, the more likely you think that was the option the person responding to the question was looking at.
       </p>
       <div class="center">
-        <button id="continue_button" type="button" onclick="_s.button()">Continue</button>
+        <div class="space_msg_all" style="color:red;">
+              Press <strong>Space</strong> to continue!</div>
       </div>
     </div>
 
@@ -135,10 +136,6 @@
             <td class="structureleft">
               <div class="scenario"></div>
             </td>
-            <td>
-            </td>
-            <td>
-            </td>
           </tr>
           <tr>
             <td class="structureleft">
@@ -146,8 +143,6 @@
             </td>
             <td class="structureleft">
               <div class="answer"></div>
-            </td>
-            <td>
             </td>
           </tr>
           <tr>
@@ -158,55 +153,37 @@
               <div class="person2_pic"></div>
             </td>
             <td class="structureright">
-              <div class="prompt1"></div>
-              <div class="rangeslider">
-                  <input type="range" list="tickmarks" min="-20" max="20" value="0" class="slider" id="earliest">
-                  <datalist class="tickmarks">
-                  <option value="-20"><span class="step_1">step_1</span></option>
-                  <option value="-15"><span class="step_2">step_2</span></option>
-                  <option value="-10"><span class="step_3">step_3</span></option>
-                  <option value="-5"><span class="step_4">step_4</span></option>
-                  <option value="0"><span class="step_5">step_5</span></option>
-                  <option value="5"><span class="step_6">step_6</span></option>
-                  <option value="10"><span class="step_7">step_7</span></option>
-                  <option value="15"><span class="step_8">step_8</span></option>
-                  <option value="20"><span class="step_9">step_9</span></option>
-                  </datalist>
-                  <p><span id="early"></span></p>
-              </div>
-              <br>
-              <br>
-              <div class="prompt2"></div>
-              <div class="rangeslider">
-                  <input type="range" list="tickmarks" min="-20" max="20" value="0" class="slider" id="latest">
-                  <!-- <datalist id="tickmarks">
-                  <option value="-20" label="2:40"></option>
-                  <option value="-15" label="2:45"></option>
-                  <option value="-10" label="2:50"></option>
-                  <option value="-5" label="2:55"></option>
-                  <option value="0" label="3:00"></option>
-                  <option value="5" label="3:05"></option>
-                  <option value="10" label="3:10"></option>
-                  <option value="15" label="3:15"></option>
-                  <option value="20" label="3:20"></option>
-                  </datalist> -->
-                  <datalist class="tickmarks">
-                  <option value="-20"><span class="step_1">step_1</span></option>
-                  <option value="-15"><span class="step_2">step_2</span></option>
-                  <option value="-10"><span class="step_3">step_3</span></option>
-                  <option value="-5"><span class="step_4">step_4</span></option>
-                  <option value="0"><span class="step_5">step_5</span></option>
-                  <option value="5"><span class="step_6">step_6</span></option>
-                  <option value="10"><span class="step_7">step_7</span></option>
-                  <option value="15"><span class="step_8">step_8</span></option>
-                  <option value="20"><span class="step_9">step_9</span></option>
-                  </datalist>
-                  <p><span id="late"></span></p>
-              </div>
+              <div class="phone_shirt"></div>
+              <div class="prompt"></div>
             </td>
           </tr>
           <tr>
-            <td>
+            <td class="structureleft">
+              <div class="clockMMlow"></div>
+            </td>
+            <td class="structureleft">
+              <div class="clockNMlow"></div>
+            </td>
+            <td class="structureleft">
+              <div class="clockNNMlow"></div>
+            </td>
+            <td class="structureleft">
+              <div class="clockM"></div>
+            </td>
+            <td class="structureleft">
+              <div class="clockNNMhigh"></div>
+            </td>
+            <td class="structureleft">
+              <div class="clockNMhigh"></div>
+            </td>
+            <td class="structureleft">
+              <div class="clockMMhigh"></div>
+            </td>
+          </tr>
+          <tr>
+            <td class="coins">
+              <div class="avbl_coins">
+              Available coins:</div>
               <button class="button" onclick="_s.button()">Continue</button>
             </td>
           </tr>
