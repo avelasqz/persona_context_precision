@@ -4,55 +4,63 @@ var all_stims =
     "type": "crit",
     "item": "bank_crit",
     "scenario": "person1 is walking quickly down the street and accidentally bumps into person2.",
-    "prompt": "By  saying 'TIME', what is the earliest time you think person2 likely meant?",
-    "prompt2": "What is the latest time you think person2 likely meant?"
+    "prompt1": "By  saying 'TIME', what is the earliest time you think person2 could have meant?",
+    "prompt2": "What is the latest time you think person2 could have meant?"
   },
   {
     "type": "crit",
     "item": "shopping_crit",
     "scenario": "person1 and person2 are going shopping. person1 checks to see if the store is open.",
-    "prompt": "By  saying 'TIME', what is the earliest time you think person2 likely meant?",
-    "prompt2": "What is the latest time you think person2 likely meant?"
+    "prompt1": "By  saying 'TIME', what is the earliest time you think person2 could have meant?",
+    "prompt2": "What is the latest time you think person2 could have meant?"
   },
   {
     "type": "crit",
     "item": "airport_crit",
     "scenario": "person1 and person2 are eating together. person1 is thinking about the rest of the day.",
-    "prompt": "By  saying 'TIME', what is the earliest time you think person2 likely meant?",
-    "prompt2": "What is the latest time you think person2 likely meant?"
+    "prompt1": "By  saying 'TIME', what is the earliest time you think person2 could have meant?",
+    "prompt2": "What is the latest time you think person2 could have meant?"
   },
   {
     "type": "crit",
     "item": "premiere_crit",
     "scenario": "person1 and person2 have just finished a walk. They're going to see a new movie that night.",
-    "prompt": "By  saying 'TIME', what is the earliest time you think person2 likely meant?",
-    "prompt2": "What is the latest time you think person2 likely meant?"
+    "prompt1": "By  saying 'TIME', what is the earliest time you think person2 could have meant?",
+    "prompt2": "What is the latest time you think person2 could have meant?"
   },
   {
     "type": "fill",
-    "item": "shopping_fill",
-    "scenario": "person1 and person2 are shopping for an outfit for a party that night.",
-    "prompt": "How likely is it that by 'COLOR', person2 meant ...",
-    "prompt2": "How likely is it that by 'COLOR', person2 meant ..."
+    "item": "phone_fill",
+    "scenario": "person2 has been put on hold on the phone. person1 walks in.",
+    //How long have you been on hold?
+    //MINUTES
+    "prompt1": "By saying 'MINUTE minutes', what is the least amount of time, in minutes, person2 could have meant?",
+    "prompt2": "What is the greatest amount of time, in minutes, person2 could have meant?"
   },
   {
     "type": "fill",
-    "item": "pictures_fill",
-    "scenario": "person1 is going to take pictures with a friend and is talking to person2.",
-    "prompt": "How likely is it that by 'COLOR', person2 meant ...",
-    "prompt2": "How likely is it that by 'COLOR', person2 meant ..."
+    "item": "store_fill",
+    "scenario": "person2 is waiting in line at the store. person1 walks up.",
+    //Hey, I'm kind of in a hurry, maybe I should come back later. How long have you been waiting in line?
+    //MINUTES
+    "prompt1": "By saying 'MINUTE minutes', what is the least amount of time, in minutes, person2 could have meant?",
+    "prompt2": "What is the greatest amount of time, in minutes, person2 could have meant?"
   },
   {
     "type": "fill",
-    "item": "workshirt_fill",
-    "scenario": "person1 is talking to person2 and choosing a shirt for work.",
-    "prompt": "How likely is it that by 'COLOR', person2 meant ...",
-    "prompt2": "How likely is it that by 'COLOR', person2 meant ..."
+    "item": "coffee_fill",
+    "scenario": "person2 is waiting for their coffee in a cafe. person1 comes in from outside.",
+    //Oh no, I've gotta be at work soon, I wonder if I should order. How long have you been waiting for your drink?
+    //MINUTES
+    "prompt1": "By saying 'MINUTE minutes', what is the least amount of time, in minutes, person2 could have meant?",
+    "prompt2": "What is the greatest amount of time, in minutes, person2 could have meant?"
   },
   {
     "type": "fill",
-    "item": "yardwork_fill",
-    "scenario": "person1 is talking to person2 and selecting clothes to wear for yardwork.",
-    "prompt": "How likely is it that by 'COLOR', person2 meant ...",
-    "prompt2": "How likely is it that by 'COLOR', person2 meant ..."
+    "item": "restaurant_fill",
+    "scenario": "person2 is waiting to be seated in a restaurant. person1 steps through the door next to person2.",
+    //How long have you been waiting for a table?
+    //MINUTES
+    "prompt1": "By saying 'MINUTE minutes', what is the least amount of time, in minutes, person2 could have meant?",
+    "prompt2": "What is the greatest amount of time, in minutes, person2 could have meant?"
   }]

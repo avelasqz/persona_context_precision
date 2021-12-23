@@ -38,21 +38,22 @@ function make_slides(f) {
 
     present: exp.stimuli,
     present_handle : function(stim) {
+      exp.startTrial = Date.now();
       $('.scenario').hide();
       $('.question').hide();
       $('.answer').hide();
       $('.prompt1').hide();
-      $('#earliest').hide();
-      $('#latest').hide();
+      $('#minimum').hide();
+      $('#maximum').hide();
       $('.prompt2').hide();
       $('.person1_pic').hide();
       $('.person2_pic').hide();
       $('.button').hide();
       $('.tickmarks').hide();
-      $('#early').hide();
-      $('#late').hide();
-      $('#earliest').val("");
-      $('#latest').val("");
+      $('#min').hide();
+      $('#max').hide();
+      $('#minimum').val("");
+      $('#maximum').val("");
 
       exp.response = null
 
@@ -106,7 +107,7 @@ function make_slides(f) {
         $(".answer").html(exp.answer_bubble);
         console.log("answer:", exp.answer_bubble);
 
-        exp.color = "none";
+        exp.minute = "none";
 
         exp.image_pair = exp.images.shift();
         exp.image1 = exp.image_pair.shift();
@@ -122,10 +123,10 @@ function make_slides(f) {
 
 
 
-        exp.prompt = stim.prompt.replace("person2", exp.current_char2);
-        exp.prompt = exp.prompt.replace("TIME", exp.time);
-        exp.prompt = exp.prompt.replace("TIME", exp.time);
-        $(".prompt1").html(exp.prompt);
+        exp.prompt1 = stim.prompt1.replace("person2", exp.current_char2);
+        exp.prompt1 = exp.prompt1.replace("TIME", exp.time);
+        exp.prompt1 = exp.prompt1.replace("TIME", exp.time);
+        $(".prompt1").html(exp.prompt1);
 
         exp.prompt2 = stim.prompt2.replace("person2", exp.current_char2);
         exp.prompt2 = exp.prompt2.replace("TIME", exp.time);
@@ -148,20 +149,20 @@ function make_slides(f) {
         // var value = $('#latest').val();
         // $("#late").html(value)
 
-        var rangeslider_early = document.getElementById("earliest");
-        exp.output_early = document.getElementById("early");
-        exp.output_early.innerHTML = rangeslider_early.value;
+        var rangeslider_min = document.getElementById("minimum");
+        exp.output_min = document.getElementById("min");
+        exp.output_min.innerHTML = rangeslider_min.value;
   
-        rangeslider_early.oninput = function() {
-          exp.output_early.innerHTML = this.value;
+        rangeslider_min.oninput = function() {
+          exp.output_min.innerHTML = this.value;
         }
 
-        var rangeslider_late = document.getElementById("latest");
-        exp.output_late = document.getElementById("late");
-        exp.output_late.innerHTML = rangeslider_late.value;
+        var rangeslider_max = document.getElementById("maximum");
+        exp.output_max = document.getElementById("max");
+        exp.output_max.innerHTML = rangeslider_max.value;
   
-        rangeslider_late.oninput = function() {
-          exp.output_late.innerHTML = this.value;
+        rangeslider_max.oninput = function() {
+          exp.output_max.innerHTML = this.value;
         }
 
 
@@ -187,6 +188,7 @@ function make_slides(f) {
         exp.scenario = stim.scenario.replace("person1", exp.current_char1)
         exp.scenario = exp.scenario.replace("person1", exp.current_char1)
         exp.scenario = exp.scenario.replace("person2", exp.current_char2)
+        exp.scenario = exp.scenario.replace("person2", exp.current_char2)
         $(".scenario").html(exp.scenario);
         console.log("scenario:", exp.scenario)
 
@@ -198,9 +200,18 @@ function make_slides(f) {
         $(".question").html(exp.question_bubble);
         console.log("question:", exp.question_bubble);
 
-        exp.color = exp.colors.shift();
+        exp.minutes_matrix = exp.minutes.shift();
+        exp.minute_step_1 = exp.minutes_matrix.shift();
+        exp.minute_step_2 = exp.minutes_matrix.shift();
+        exp.minute_step_3 = exp.minutes_matrix.shift();
+        exp.minute_step_4 = exp.minutes_matrix.shift();
+        exp.minute = exp.minutes_matrix.shift();
+        exp.minute_step_6 = exp.minutes_matrix.shift();
+        exp.minute_step_7 = exp.minutes_matrix.shift();
+        exp.minute_step_8 = exp.minutes_matrix.shift();
+        exp.minute_step_9 = exp.minutes_matrix.shift();
 
-        exp.answer_bubble = '<img src="images/'+ exp.color + '.png'+'" style="height:150px">';
+        exp.answer_bubble = '<img src="images/'+ exp.minute + '.png'+'" style="height:150px">';
 
         $(".answer").html(exp.answer_bubble);
         console.log("answer:", exp.answer_bubble);
@@ -223,32 +234,42 @@ function make_slides(f) {
         $(".person2_pic").html(exp.person2_pic);
 
 
-        exp.prompt = stim.prompt.replace("person2", exp.current_char2);
-        exp.prompt = exp.prompt.replace("COLOR", exp.color);
-        $(".prompt1").html(exp.prompt);
+        exp.prompt1 = stim.prompt1.replace("person2", exp.current_char2);
+        exp.prompt1 = exp.prompt1.replace("MINUTE", exp.minute);
+        $(".prompt1").html(exp.prompt1);
 
         exp.prompt2 = stim.prompt2.replace("person2", exp.current_char2);
-        exp.prompt2 = exp.prompt2.replace("COLOR", exp.color);
+        exp.prompt2 = exp.prompt2.replace("MINUTE", exp.minute);
         $(".prompt2").html(exp.prompt2);
+
+        $(".step_1").html(exp.minute_step_1);
+        $(".step_2").html(exp.minute_step_2);
+        $(".step_3").html(exp.minute_step_3);
+        $(".step_4").html(exp.minute_step_4);
+        $(".step_5").html(exp.minute);
+        $(".step_6").html(exp.minute_step_6);
+        $(".step_7").html(exp.minute_step_7);
+        $(".step_8").html(exp.minute_step_8);
+        $(".step_9").html(exp.minute_step_9);
 
         // $("#early").html($("#early").val());
         // $("#late").html("50")
 
 
-        var rangeslider_early = document.getElementById("earliest");
-        exp.output_early = document.getElementById("early");
-        exp.output_early.innerHTML = rangeslider_early.value;
+        var rangeslider_min = document.getElementById("minimum");
+        exp.output_min = document.getElementById("min");
+        exp.output_min.innerHTML = rangeslider_min.value;
   
-        rangeslider_early.oninput = function() {
-          exp.output_early.innerHTML = this.value;
+        rangeslider_min.oninput = function() {
+          exp.output_min.innerHTML = this.value;
         }
 
-        var rangeslider_late = document.getElementById("latest");
-        exp.output_late = document.getElementById("late");
-        exp.output_late.innerHTML = rangeslider_late.value;
+        var rangeslider_max = document.getElementById("maximum");
+        exp.output_max = document.getElementById("max");
+        exp.output_max.innerHTML = rangeslider_max.value;
   
-        rangeslider_late.oninput = function() {
-          exp.output_late.innerHTML = this.value;
+        rangeslider_max.oninput = function() {
+          exp.output_max.innerHTML = this.value;
         }
 
 
@@ -263,9 +284,9 @@ function make_slides(f) {
       setTimeout(function() {
         $('.prompt1').show();
         $('.tickmarks').show();
-        $('#earliest').show();
+        $('#minimum').show();
         $('.prompt2').show();
-        $('#latest').show();
+        $('#maximum').show();
         $('.button').show();
       }, 3000)
       
@@ -273,6 +294,7 @@ function make_slides(f) {
     },
 
     button: function() {
+      exp.endTrial = Date.now();
       this.log_responses();
       _stream.apply(this);
     },
@@ -287,9 +309,11 @@ function make_slides(f) {
         "image1": exp.image1,
         "image2": exp.image2,
         "time": exp.time,
-        "color": exp.color,
-        "earliest": exp.output_early.innerHTML,
-        "latest": exp.output_late.innerHTML
+        "minute": exp.minute,
+        "minimum": exp.output_min.innerHTML,
+        "maximum": exp.output_max.innerHTML,
+
+        "trial_time_minutes": (exp.endTrial - exp.startTrial) / 60000
       })
     }
 
@@ -431,14 +455,13 @@ function init() {
   // the above with four critical trials, only two character types in play, each character seen only once, speaking to another character of the same type; and four filler trials, only one character type in play, each character seen only once
 
 
-  exp.times = _.shuffle([["2:40", "2:45", "2:50", "2:55", "3:00", "3:05", "3:10", "3:15", "3:20"], ["1:10", "1:15", "1:20", "1:25", "1:30", "1:35", "1:40", "1:45", "1:50"], ["10:40", "10:45", "10:50", "10:55", "11:00", "11:05", "11:10", "11:15", "11:20"], ["9:10", "9:15", "9:20", "9:25", "9:30", "9:35", "9:40", "9:45", "9:50"]])
+  exp.times = _.shuffle([["2:40", "2:45", "2:50", "2:55", "3:00", "3:05", "3:10", "3:15", "3:20"], ["1:10", "1:15", "1:20", "1:25", "1:30", "1:35", "1:40", "1:45", "1:50"], ["7:40", "7:45", "7:50", "7:55", "8:00", "8:05", "8:10", "8:15", "8:20"], ["9:10", "9:15", "9:20", "9:25", "9:30", "9:35", "9:40", "9:45", "9:50"]])
   console.log("times order:", exp.times);
 
 
-  exp.colors = _.shuffle(["blue", "red", "green", "yellow"])
+  exp.minutes = _.shuffle([["1", "2", "3", "4", "5", "6", "7", "8", "9"], ["6", "7", "8", "9", "10", "11", "12", "13", "14"], ["11", "12", "13", "14", "15", "16", "17", "18", "19"], ["16", "17", "18", "19", "20", "21", "22", "23", "24"]])
+  console.log("minutes order:", exp.minutes);
 
-
-  $('.phone').html('<img src="images/phone.png" style="height:175px">');
 
   // function makeStims(cond, i) {
   //   stims[i].condition = cond;

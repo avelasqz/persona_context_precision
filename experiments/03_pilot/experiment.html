@@ -49,7 +49,7 @@
         Welcome!
         <br>
         <br>
-        On the following screens, you will see pairs of people having small conversations, and you will be asked to answer some questions about things in their environment. It should take about !!! minutes in all.
+        On the following screens, you will see pairs of people having small conversations, and you will be asked to answer some questions about their discussion. It should take about !!! minutes in all.
       </p>
       <button id="start_button" type="button">Start</button>
       <p class="left legal">
@@ -98,16 +98,13 @@
         Okay, let's get started.
         <br>
         <br>
-        On the following screens you'll see pairs of characters in certain places where one of them asks a question.
+        On the following screens you'll see pairs of characters in certain situations where one of them asks a question.
         <br>
         <br>
-        The other person responds based on what they are seeing.
+        The other person responds.
         <br>
         <br>
-        Your task is to guess which thing the responding person is seeing. You do this by distributing ten coins across the options offered in the bottom half of the screen.
-        <br>
-        <br>
-        The more coins you give an option, the more likely you think that was the option the person responding to the question was looking at.
+        Your task is to give your opinion about the second person's response. You do this by using your cursor to move the buttons along the sliders provided.
       </p>
       <div class="center">
         <button id="continue_button" type="button" onclick="_s.button()">Continue</button>
@@ -160,7 +157,18 @@
             <td class="structureright">
               <div class="prompt1"></div>
               <div class="rangeslider">
-                  <input type="range" list="tickmarks" min="-20" max="20" value="0" class="slider" id="earliest">
+                  <input type="range" list="tickmarks" min="-20" max="20" value="0" class="slider" id="minimum">
+                  <svg role="presentation" width="350px" height="10">
+                    <rect class="range__tick" x="0%%" y="3" width="1" height="10"></rect>
+                    <rect class="range__tick" x="12.5%" y="3" width="1" height="10"></rect>
+                    <rect class="range__tick" x="25%" y="3" width="1" height="10"></rect>
+                    <rect class="range__tick" x="37.5%" y="3" width="1" height="10"></rect>
+                    <rect class="range__tick" x="50%" y="3" width="1" height="10"></rect>
+                    <rect class="range__tick" x="62.5%" y="3" width="1" height="10"></rect>
+                    <rect class="range__tick" x="75%" y="3" width="1" height="10"></rect>
+                    <rect class="range__tick" x="87.5%" y="3" width="1" height="10"></rect>
+                    <rect class="range__tick" x="100%" y="3" width="1" height="10"></rect>
+                  </svg>
                   <datalist class="tickmarks">
                   <option value="-20"><span class="step_1">step_1</span></option>
                   <option value="-15"><span class="step_2">step_2</span></option>
@@ -172,13 +180,13 @@
                   <option value="15"><span class="step_8">step_8</span></option>
                   <option value="20"><span class="step_9">step_9</span></option>
                   </datalist>
-                  <p><span id="early"></span></p>
+                  <p><span id="min"></span></p>
               </div>
               <br>
               <br>
               <div class="prompt2"></div>
               <div class="rangeslider">
-                  <input type="range" list="tickmarks" min="-20" max="20" value="0" class="slider" id="latest">
+                  <input type="range" list="tickmarks" min="-20" max="20" value="0" class="slider" id="maximum">
                   <!-- <datalist id="tickmarks">
                   <option value="-20" label="2:40"></option>
                   <option value="-15" label="2:45"></option>
@@ -201,7 +209,7 @@
                   <option value="15"><span class="step_8">step_8</span></option>
                   <option value="20"><span class="step_9">step_9</span></option>
                   </datalist>
-                  <p><span id="late"></span></p>
+                  <p><span id="max"></span></p>
               </div>
             </td>
           </tr>
