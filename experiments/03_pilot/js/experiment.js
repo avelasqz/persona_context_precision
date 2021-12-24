@@ -64,6 +64,10 @@ function make_slides(f) {
 
       if (stim.type == "crit") {
         
+        $('.white_box').html('<img src="images/white_box.png" style="width:360px">');
+
+        $('.white_box').show();
+
         $(".type").html(stim.type);
         console.log("type:", stim.type);
 
@@ -171,6 +175,10 @@ function make_slides(f) {
 
 
       } else {
+
+        $('.white_box').html('<img src="images/white_box.png" style="width:360px">');
+
+        $('.white_box').show();
 
         $(".type").html(stim.type);
         console.log("type:", stim.type)
@@ -282,6 +290,7 @@ function make_slides(f) {
       $('.person1_pic').show();
       $('.person2_pic').show();
       setTimeout(function() {
+        $('.white_box').hide();
         $('.prompt1').show();
         $('.tickmarks').show();
         $('#minimum').show();
@@ -459,7 +468,7 @@ function init() {
   console.log("times order:", exp.times);
 
 
-  exp.minutes = _.shuffle([["1", "2", "3", "4", "5", "6", "7", "8", "9"], ["6", "7", "8", "9", "10", "11", "12", "13", "14"], ["11", "12", "13", "14", "15", "16", "17", "18", "19"], ["16", "17", "18", "19", "20", "21", "22", "23", "24"]])
+  exp.minutes = _.shuffle([["1", "2", "3", "4", "5", "6", "7", "8", "9"], ["&nbsp;&nbsp;6", "&nbsp;&nbsp;7", "&nbsp;&nbsp;8", "&nbsp;&nbsp;9", "10", "11", "12", "13", "14"], ["11", "12", "13", "14", "15", "16", "17", "18", "19"], ["16", "17", "18", "19", "20", "21", "22", "23", "24"]])
   console.log("minutes order:", exp.minutes);
 
 

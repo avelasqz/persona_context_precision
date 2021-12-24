@@ -1,9 +1,15 @@
 .slider {
    /*default is width 400 and margin 10 */
-	width: 350px;
+	-webkit-appearance: none; /*override default CSS styles*/
+  appearance: none;
+  border-radius: 5px;
+  width: 350px;
 	margin: 10px;
-  background: transparent;
-  opacity:  2;
+  background: #d3d3d3; /*gray background*/
+  outline: none;
+  opacity:  0.7; /*set transparency for mouse-over effects on hover*/
+  -webkit-transition: .2s; /*0.2 second transition on hover*/
+  transition: opacity .2s;
   height:  10px;
 }
 
@@ -14,9 +20,10 @@
 .slider::-webkit-slider-thumb {
     -webkit-appearance: none;
     cursor: pointer;
-    background: #34495E  ;
-    width: 5%;
+    background: midnightblue;
+    width: 2%;
     height: 20px;
+
 }
 
 input.range:focus {
@@ -242,7 +249,7 @@ td.structurebold {
 
 datalist {
   display: flex;
-  justify-content: space-evenly;
+  justify-content: space-between;
   font-size: 80%;
   color: black;
   width: 100%;
