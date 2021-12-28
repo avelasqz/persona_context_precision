@@ -49,7 +49,7 @@
         Welcome!
         <br>
         <br>
-        On the following screens, you will see pairs of people having small conversations, and you will be asked to answer some questions about their discussion. It should take about !!! minutes in all.
+        On the following screens, you will see pairs of people having small conversations, and you will be asked to answer some questions about their discussion. It should take about 5 minutes in all.
       </p>
       <button id="start_button" type="button">Start</button>
       <p class="left legal">
@@ -95,23 +95,21 @@
       <p class="left">
         <br>
         <br>
-        Okay, let's get started.
+        <!-- On the following screens you'll see pairs of characters in certain situations where one of them asks a question. -->
+        On the following screens you'll see pairs of characters in certain situations where one of them asks a question regarding time.
         <br>
         <br>
-        On the following screens you'll see pairs of characters in certain situations where one of them asks a question.
+        <!-- The other person responds with information. -->
+        The other person responds with information about time.
         <br>
         <br>
-        The other person responds.
-        <br>
-        <br>
-        Your task is to give your opinion about the second person's response. You do this by using your cursor to move the buttons along the sliders provided.
+        <!-- Your task is to give your opinion about the second person's response. You do this by using your cursor to move the buttons along the sliders provided. -->
+        Your task is to answer questions about the element of time in the second person's response. You do this by using your cursor to move the buttons along the sliders provided.
       </p>
       <div class="center">
         <button id="continue_button" type="button" onclick="_s.button()">Continue</button>
       </div>
     </div>
-
-
 
 
 
@@ -237,8 +235,8 @@
           Answering these questions is optional, but will help us understand your answers.
         </p>
         <p>
-          Did you read the instructions and do you think you did the HIT correctly?
-        </p><label><input type="radio" name="assess" value="No">No</label> <label><input type="radio" name="assess" value="Yes">Yes</label> <label><input type="radio" name="assess" value="Confused">I was confused</label>
+          Did you understand the task we asked you to complete?
+        </p><label><input type="radio" name="assess" value="No">No</label> <label><input type="radio" name="assess" value="Yes">Yes</label>
         <p>
           Gender: <select id="gender">
             <option value="">
@@ -262,25 +260,28 @@
             <option value="-1">
             </option>
             <option value="0">
-              Some high school
+              Did not attend high school
             </option>
             <option value="1">
-              Graduated high school
+              Some high school
             </option>
             <option value="2">
-              Some college
+              Graduated high school
             </option>
             <option value="3">
-              Graduated college
+              Some college
             </option>
             <option value="4">
+              Graduated college
+            </option>
+            <option value="5">
               Hold a higher degree
             </option>
           </select>
         </p>
         <p>
-          Native language: <input type="text" id="language">
-        </p><label>(the language(s) spoken at home when you were a child)</label>
+          What language(s) did you speak at home when you were a child?: <input type="text" id="language">
+        </p>
         <p>
           Do you think the payment was fair?
         </p><select id="fairprice">
@@ -309,7 +310,7 @@
           </option>
         </select>
         <p>
-          We would be interested in any comments you have about this experiment. Please type them here:
+          We're interested in hearing your feedback on the experiment. Please type any comments here:
         </p>
         <textarea id="comments" rows="3" cols="50"></textarea><br>
         <button onclick="_s.submit()">Submit</button>

@@ -128,6 +128,7 @@ function make_slides(f) {
 
 
         exp.prompt1 = stim.prompt1.replace("person2", exp.current_char2);
+        exp.prompt1 = exp.prompt1.replace("person1", exp.current_char1);
         exp.prompt1 = exp.prompt1.replace("TIME", exp.time);
         exp.prompt1 = exp.prompt1.replace("TIME", exp.time);
         $(".prompt1").html(exp.prompt1);
@@ -243,6 +244,7 @@ function make_slides(f) {
 
 
         exp.prompt1 = stim.prompt1.replace("person2", exp.current_char2);
+        exp.prompt1 = exp.prompt1.replace("person1", exp.current_char1);
         exp.prompt1 = exp.prompt1.replace("MINUTE", exp.minute);
         $(".prompt1").html(exp.prompt1);
 
