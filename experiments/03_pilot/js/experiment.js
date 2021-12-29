@@ -63,6 +63,10 @@ function make_slides(f) {
       this.stim = stim;
 
       if (stim.type == "crit") {
+
+        exp.crit_trial_number = exp.crit_trial_number_count += 1
+
+        exp.fill_trial_number = "NA"
         
         $('.white_box').html('<img src="images/white_box.png" style="width:360px">');
 
@@ -74,6 +78,15 @@ function make_slides(f) {
         exp.item = stim.item;
         $(".item").html(exp.item);
         console.log("item:", exp.item);
+
+        if (exp.item.includes("shopping")) {
+          exp.stakes = "high"
+        } else if (exp.item.includes("bank")) {
+          exp.stakes = "high"
+        } else {
+          exp.stakes = "low"
+        };
+        console.log("stakes:", exp.stakes)
 
         exp.current_char1 = exp.chars.shift();
         console.log("character 1:", exp.current_char1);
@@ -118,6 +131,13 @@ function make_slides(f) {
         console.log("image 1:", exp.image1);
         exp.image2 = exp.image_pair.shift();
         console.log("image 2:", exp.image2);
+
+        if (exp.image1.includes("nerd")) {
+          exp.char_type = "nerd"
+        } else {
+          exp.char_type = "hippie"
+        };
+        console.log("character type:", exp.char_type)
 
         exp.person1_pic = '<img src="images/'+exp.image1 + '.png'+'" style="height:250px">';
         $(".person1_pic").html(exp.person1_pic);
@@ -177,6 +197,10 @@ function make_slides(f) {
 
       } else {
 
+        exp.fill_trial_number = exp.fill_trial_number_count += 1
+
+        exp.crit_trial_number = "NA"
+
         $('.white_box').html('<img src="images/white_box.png" style="width:360px">');
 
         $('.white_box').show();
@@ -187,6 +211,15 @@ function make_slides(f) {
         exp.item = stim.item;
         $(".item").html(exp.item);
         console.log("item:", stim.item)
+
+        if (exp.item.includes("store")) {
+          exp.stakes = "high"
+        } else if (exp.item.includes("coffee")) {
+          exp.stakes = "high"
+        } else {
+          exp.stakes = "low"
+        };
+        console.log("stakes:", exp.stakes)
 
         exp.current_char1 = exp.chars.shift()
         console.log("character 1:", exp.current_char1)
@@ -235,6 +268,9 @@ function make_slides(f) {
         console.log("image 1:", exp.image1);
         exp.image2 = exp.fill_images.shift();
         console.log("image 2:", exp.image2);
+
+        exp.char_type = "fill"
+        console.log("character type:", exp.char_type)
 
         exp.person1_pic = '<img src="images/'+exp.image1 + '.png'+'" style="height:250px">';
         $(".person1_pic").html(exp.person1_pic);
@@ -313,10 +349,14 @@ function make_slides(f) {
     log_responses: function () {
       exp.data_trials.push({
         "trial_number": exp.trial_number,
+        "crit_trial_number": exp.crit_trial_number,
+        "fill_trial_number": exp.fill_trial_number,
         "trial_type": this.stim.type,
         "item": this.stim.item,
+        "stakes": exp.stakes,
         "name1": exp.current_char1,
         "name2": exp.current_char2,
+        "character_type": exp.char_type,
         "image1": exp.image1,
         "image2": exp.image2,
         "time": exp.time,
@@ -484,6 +524,10 @@ function init() {
   // console.log("condition", cond)
   
   exp.trial_number = 0
+
+  exp.crit_trial_number_count = 0
+
+  exp.fill_trial_number_count = 0
 
   exp.system = {
     Browser: BrowserDetect.browser,
