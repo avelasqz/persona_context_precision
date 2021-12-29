@@ -139,6 +139,20 @@ function make_slides(f) {
         };
         console.log("character type:", exp.char_type)
 
+        if (exp.image1.includes("guy")) {
+          exp.questioner_gender = "male"
+        } else {
+          exp.questioner_gender = "female"
+        };
+        console.log("questioner gender:", exp.questioner_gender)
+
+        if (exp.image2.includes("guy")) {
+          exp.answerer_gender = "male"
+        } else {
+          exp.answerer_gender = "female"
+        };
+        console.log("answerer gender:", exp.answerer_gender)
+
         exp.person1_pic = '<img src="images/'+exp.image1 + '.png'+'" style="height:250px">';
         $(".person1_pic").html(exp.person1_pic);
 
@@ -272,6 +286,20 @@ function make_slides(f) {
         exp.char_type = "fill"
         console.log("character type:", exp.char_type)
 
+        if (exp.image1.includes("guy")) {
+          exp.questioner_gender = "male"
+        } else {
+          exp.questioner_gender = "female"
+        };
+        console.log("questioner gender:", exp.questioner_gender)
+
+        if (exp.image2.includes("guy")) {
+          exp.answerer_gender = "male"
+        } else {
+          exp.answerer_gender = "female"
+        };
+        console.log("answerer gender:", exp.answerer_gender)
+
         exp.person1_pic = '<img src="images/'+exp.image1 + '.png'+'" style="height:250px">';
         $(".person1_pic").html(exp.person1_pic);
 
@@ -359,6 +387,8 @@ function make_slides(f) {
         "character_type": exp.char_type,
         "image1": exp.image1,
         "image2": exp.image2,
+        "questioner gender": exp.questioner_gender,
+        "answerer gender": exp.answerer_gender,
         "time": exp.time,
         "minute": exp.minute,
         "minimum": exp.output_min.innerHTML,
