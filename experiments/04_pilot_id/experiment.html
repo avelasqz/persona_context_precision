@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>
+      Language Experiment
+    </title><!--JS-->
+    <!-- external general utilities -->
+    <script src="shared/js/jquery-1.11.1.min.js"></script>
+    <script src="shared/full-projects/jquery-ui/jquery-ui.min.js"></script>
+    <script src="shared/js/underscore-min.js"></script>
+    
+    <!-- experiment logic -->
+    <script src="shared/js/exp-V2.js"></script>
+    <script src="shared/js/stream-V2.js"></script>
+
+    <!-- utilities to submit data to proliferate -->
+    <script src="https://proliferate.alps.science/static/js/proliferate.js"></script>
+
+    <!-- general utilities -->
+    <script src="shared/js/browserCheck.js"></script>
+    <script src="shared/js/utils.js"></script>
+    <link href="shared/full-projects/jquery-ui/jquery-ui.min.css" rel="stylesheet" type="text/css">
+    <link href="shared/css/cocolab-style.css" rel="stylesheet" type="text/css">
+    <link href="css/local-style.css" rel="stylesheet" type="text/css">
+
+    <!-- experiment file -->
+    <script src="js/experiment.js"></script>
+
+    <!-- stimulus file -->
+    <script src="js/stimuli.js"></script>
+  </head>
+
+  <body onload="init()">
+    <noscript>This task requires JavaScript.</noscript>
+    
+
+
+
+
+
+
+
+
+    <!-- initial slide -->
+    <div class="slide" id="i0">
+      <p class="left">
+        <br>
+        <br>
+        Welcome!
+        <br>
+        <br>
+        On the following screens, you will see pairs of people having small conversations, and you will be asked to answer some questions about their discussion. It should take about 5 minutes in all.
+      </p>
+      <button id="start_button" type="button">Start</button>
+      <p class="left legal">
+        <strong><br>
+        <br>
+        <br>
+        LEGAL INFORMATION</strong>:<br>
+        <br>
+        We invite you to participate in a research study on language production and comprehension. Your experimenter will ask you to do a linguistic task such as reading sentences or words, naming pictures or describing scenes, making up sentences of your own, or participating in a simple language game.
+        <br>
+        <br>
+        There are no risks or benefits of any kind involved in this study.
+        <br>
+        <br>
+        You will be paid for your participation at the posted rate. If you have read this form and have decided to participate in this experiment, please understand your participation is voluntary and you have the right to withdraw your consent or discontinue participation at any time without penalty or loss of benefits to which you are otherwise entitled. You have the right to refuse to do particular tasks. Your individual privacy will be maintained in all published and written dataresulting from the study.
+        <br>
+        <br>
+        You may print this form for your records.
+       <br>
+        <br>
+        CONTACT INFORMATION: If you have any questions, concerns or complaints about this research study, its procedures, risks and benefits, you should contact the Protocol Director Meghan Sumner at (650)-725-9336.
+        <br>
+        <br>
+        If you are not satisfied with how this study is being conducted, or if you have any concerns, complaints, or general questions about the research or your rights as a participant, please contact the Stanford Institutional Review Board (IRB) to speak to someone independent of the research team at (650)-723-2480 or toll free at 1-866-680-2906. You can also write to the Stanford IRB, Stanford University, 3000 El Camino Real, Five Palo Alto Square, 4th Floor, Palo Alto, CA 94306 USA.
+        <br>
+        <br>
+        If you agree to participate, please proceed to the study tasks.
+      </p>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+    <!-- instruction slide -->
+    <div class="slide" id="instructions">
+      <p class="left">
+        <br>
+        <br>
+        <!-- On the following screens you'll see pairs of characters in certain situations where one of them asks a question. -->
+        On the following screens you'll see pairs of characters in certain situations where one of them asks a question regarding time.
+        <br>
+        <br>
+        <!-- The other person responds with information. -->
+        The other person responds with information about time.
+        <br>
+        <br>
+        <!-- Your task is to give your opinion about the second person's response. You do this by using your cursor to move the buttons along the sliders provided. -->
+        Your task is to answer questions about the element of time in the second person's response. You do this by using your cursor to move the buttons along the sliders provided.
+      </p>
+      <div class="center">
+        <button id="continue_button" type="button" onclick="_s.button()">Continue</button>
+      </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+    <!-- trial slide -->
+    <div class="slide" id="trial">
+      <p style="text-align: left">
+        <br>
+        <br>
+        <table class="sidebyside" id="stable">
+          <tr>
+            <td class="structureleft" colspan="2">
+              <div class="scenario"></div>
+            </td>
+            <td>
+            </td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <td class="structureleft">
+              <div class="question"></div>
+            </td>
+            <td class="structureleft">
+              <div class="answer"></div>
+            </td>
+            <td>
+            </td>
+          </tr>
+          <tr>
+            <td class="structureleft">
+              <div class="person1_pic"></div>
+            </td>
+            <td class="structureleft">
+              <div class="person2_pic"></div>
+            </td>
+            <td class="structureright">
+              <div class="white_box"></div>
+              <div class="prompt1"></div>
+              <div class="rangeslider">
+                  <input type="range" list="tickmarks" min="-20" max="20" value="0" class="slider" id="minimum">
+                  <datalist class="tickmarks">
+                  <option value="-20"><span class="step_1">step_1</span></option>
+                  <option value="-15"><span class="step_2">step_2</span></option>
+                  <option value="-10"><span class="step_3">step_3</span></option>
+                  <option value="-5"><span class="step_4">step_4</span></option>
+                  <option value="0"><span class="step_5">step_5</span></option>
+                  <option value="5"><span class="step_6">step_6</span></option>
+                  <option value="10"><span class="step_7">step_7</span></option>
+                  <option value="15"><span class="step_8">step_8</span></option>
+                  <option value="20"><span class="step_9">step_9</span></option>
+                  </datalist>
+                  <p><span id="min"></span></p>
+              </div>
+              <br>
+              <br>
+              <div class="prompt2"></div>
+              <div class="rangeslider">
+                  <input type="range" list="tickmarks" min="-20" max="20" value="0" class="slider" id="maximum">
+                  <datalist class="tickmarks">
+                  <option value="-20"><span class="step_1">step_1</span></option>
+                  <option value="-15"><span class="step_2">step_2</span></option>
+                  <option value="-10"><span class="step_3">step_3</span></option>
+                  <option value="-5"><span class="step_4">step_4</span></option>
+                  <option value="0"><span class="step_5">step_5</span></option>
+                  <option value="5"><span class="step_6">step_6</span></option>
+                  <option value="10"><span class="step_7">step_7</span></option>
+                  <option value="15"><span class="step_8">step_8</span></option>
+                  <option value="20"><span class="step_9">step_9</span></option>
+                  </datalist>
+                  <p><span id="max"></span></p>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+            </td>
+            <td>
+            </td>
+            <td class="center">
+              <button class="button" onclick="_s.button()">Continue</button>
+            </td>
+          </tr>
+        </table>
+      </p>
+    </div>
+
+
+
+
+    <!-- self-identification slide -->
+    <div class="slide" id="self_id">
+      <p style="text-align: left">
+        <br>
+        <br>
+        <table class="sidebyside" id="stable">
+          <tr>
+            <td class="structureleft">
+              <div class="self_id1_char_1"></div>
+              <div class="self_id2_char_1"></div>
+              <div class="self_id3_char_1"></div>
+            </td>
+            <td class="structureleft">
+              <div class="self_id1_char_2"></div>
+              <div class="self_id2_char_2"></div>
+              <div class="self_id3_char_2"></div>
+            </td>
+            <td class="structureright">
+              <div class="white_box2"></div>
+              <div class="self_id1_prompt">
+                <p>
+                  On a scale from one to seven, 1 being the <b>least</b> and 7 being the <b>most</b>, how much do you feel you identify with these characters?
+                </p>
+              </div>
+              <div class="rangeslider">
+                  <input type="range" list="tickmarks1" min="1" max="7" value="4" class="slider2" id="self_id1_slider">
+                  <datalist class="tickmarks1">
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
+                  <option value="6">6</option>
+                  <option value="7">7</option>
+                  </datalist>
+                  <p><span id="self_id1"></span></p>
+                  <button class="button1" onclick="_s.button1()">Continue</button>
+              </div>
+              <div class="self_id2_prompt">
+                <p>
+                  On a scale from one to seven, 1 being the <b>least</b> and 7 being the <b>most</b>, how much do you feel you identify with these characters?
+                </p>
+              </div>
+              <div class="rangeslider">
+                  <input type="range" list="tickmarks2" min="1" max="7" value="4" class="slider2" id="self_id2_slider">
+                  <datalist class="tickmarks2">
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
+                  <option value="6">6</option>
+                  <option value="7">7</option>
+                  </datalist>
+                  <p><span id="self_id2"></span></p>
+                  <button class="button2" onclick="_s.button2()">Continue</button>
+              </div>
+              <div class="self_id3_prompt">
+                <p>
+                  On a scale from one to seven, 1 being the <b>least</b> and 7 being the <b>most</b>, how much do you feel you identify with these characters?
+                </p>
+              </div>
+              <div class="rangeslider">
+                  <input type="range" list="tickmarks3" min="1" max="7" value="4" class="slider2" id="self_id3_slider">
+                  <datalist class="tickmarks3">
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
+                  <option value="6">6</option>
+                  <option value="7">7</option>
+                  </datalist>
+                  <p><span id="self_id3"></span></p>
+                  <button class="button3" onclick="_s.button3()">Continue</button>
+              </div>
+            </td>
+          </tr>
+        </table>
+      </p>
+    </div>
+
+
+
+
+
+    <!-- subject information slide -->
+    <div class="slide" id="subj_info">
+      <div class="long_form">
+        <div class="subj_info_title">
+          Additional information
+        </div>
+        <p class="info">
+          Answering these questions is optional, but will help us understand your answers.
+        </p>
+        <p>
+          Did you understand the task we asked you to complete?
+        </p><label><input type="radio" name="assess" value="No">No</label> <label><input type="radio" name="assess" value="Yes">Yes</label>
+        <p>
+          Gender: <select id="gender">
+            <option value="">
+            </option>
+            <option value="Male">
+              male
+            </option>
+            <option value="Female">
+              female
+            </option>
+            <option value="Other">
+              other
+            </option>
+          </select>
+        </p>
+        <p>
+          Age: <input type="text" id="age">
+        </p>
+        <p>
+          Level of education: <select id="education">
+            <option value="-1">
+            </option>
+            <option value="0">
+              Did not attend high school
+            </option>
+            <option value="1">
+              Some high school
+            </option>
+            <option value="2">
+              Graduated high school
+            </option>
+            <option value="3">
+              Some college
+            </option>
+            <option value="4">
+              Graduated college
+            </option>
+            <option value="5">
+              Hold a higher degree
+            </option>
+          </select>
+        </p>
+        <p>
+          What language(s) did you speak at home when you were a child?: <input type="text" id="language">
+        </p>
+        <p>
+          Do you think the payment was fair?
+        </p><select id="fairprice">
+          <option value="-1">
+          </option>
+          <option value="0">
+            The payment was too low
+          </option>
+          <option value="1">
+            The payment was fair
+          </option>
+        </select>
+        <p>
+          Did you enjoy the experiment?
+        </p><select id="enjoyment">
+          <option value="-1">
+          </option>
+          <option value="0">
+            Worse than the average experiment
+          </option>
+          <option value="1">
+            An average experiment
+          </option>
+          <option value="2">
+            Better than average experiment
+          </option>
+        </select>
+        <p>
+          We're interested in hearing your feedback on the experiment. Please type any comments here:
+        </p>
+        <textarea id="comments" rows="3" cols="50"></textarea><br>
+        <button onclick="_s.submit()">Submit</button>
+      </div>
+    </div>
+
+
+
+
+
+
+
+    <!-- final slide -->
+    <div id="thanks" class="slide js">
+      <p class="big">
+        Thanks for your time!
+      </p>
+    </div>
+
+
+
+
+
+
+    <!-- progress bar -->
+    <div class="progress">
+      <span>Progress:</span>
+      <div class="bar-wrapper">
+        <div class="bar" style="width: 0%"></div>
+      </div>
+    </div>
+  </body>
+</html>
