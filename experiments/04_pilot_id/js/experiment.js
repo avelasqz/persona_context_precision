@@ -403,6 +403,17 @@ function make_slides(f) {
 
 
 
+  // set up instructions slide
+  slides.interim = slide({
+    name: "interim",
+    button: function() {
+      exp.go();
+    }
+  });
+
+
+
+
   slides.self_id = slide({
     name: "self_id",
 
@@ -587,12 +598,12 @@ function make_slides(f) {
         "char_group1": exp.char_group1,
         "char_group2": exp.char_group2,
         "char_group3": exp.char_group3,
-        "image1": exp.char_1_1,
-        "image2": exp.char_1_2,
-        "image3": exp.char_2_1,
-        "image4": exp.char_2_2,
-        "image5": exp.char_3_1,
-        "image6": exp.char_3_2,
+        "self_id_image1": exp.char_1_1,
+        "self_id_image2": exp.char_1_2,
+        "self_id_image3": exp.char_2_1,
+        "self_id_image4": exp.char_2_2,
+        "self_id_image5": exp.char_3_1,
+        "self_id_image6": exp.char_3_2,
         "self_id1": exp.output_self_id1.innerHTML,
         "self_id2": exp.output_self_id2.innerHTML,
         "self_id3": exp.output_self_id3.innerHTML,
@@ -767,6 +778,7 @@ function init() {
     "i0",
     "instructions",
     "trial",
+    "interim",
     "self_id",
     "subj_info",
     "thanks"
