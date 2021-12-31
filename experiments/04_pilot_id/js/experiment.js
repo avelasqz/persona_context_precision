@@ -589,27 +589,47 @@ function make_slides(f) {
 
     button3: function() {
       exp.endID = Date.now();
-      this.log_responses();
+      // this.log_responses();
+      this.submit()
       exp.go();
     },
 
-    log_responses: function () {
-      exp.data_trials.push({
-        "char_group1": exp.char_group1,
-        "char_group2": exp.char_group2,
-        "char_group3": exp.char_group3,
-        "self_id_image1": exp.char_1_1,
-        "self_id_image2": exp.char_1_2,
-        "self_id_image3": exp.char_2_1,
-        "self_id_image4": exp.char_2_2,
-        "self_id_image5": exp.char_3_1,
-        "self_id_image6": exp.char_3_2,
-        "self_id1": exp.output_self_id1.innerHTML,
-        "self_id2": exp.output_self_id2.innerHTML,
-        "self_id3": exp.output_self_id3.innerHTML,
-        "trial_time_minutes": (exp.endID - exp.startID) / 60000
-      })
+    // log_responses: function () {
+    //   exp.data_trials.push({
+    //     "char_group1": exp.char_group1,
+    //     "char_group2": exp.char_group2,
+    //     "char_group3": exp.char_group3,
+    //     "self_id_image1": exp.char_1_1,
+    //     "self_id_image2": exp.char_1_2,
+    //     "self_id_image3": exp.char_2_1,
+    //     "self_id_image4": exp.char_2_2,
+    //     "self_id_image5": exp.char_3_1,
+    //     "self_id_image6": exp.char_3_2,
+    //     "self_id1": exp.output_self_id1.innerHTML,
+    //     "self_id2": exp.output_self_id2.innerHTML,
+    //     "self_id3": exp.output_self_id3.innerHTML,
+    //     "trial_time_minutes": (exp.endID - exp.startID) / 60000
+    //   })
+    // }
+
+    submit: function (e) {
+      exp.id_data = {
+        char_group1: exp.char_group1,
+        char_group2: exp.char_group2,
+        char_group3: exp.char_group3,
+        self_id_image1: exp.char_1_1,
+        self_id_image2: exp.char_1_2,
+        self_id_image3: exp.char_2_1,
+        self_id_image4: exp.char_2_2,
+        self_id_image5: exp.char_3_1,
+        self_id_image6: exp.char_3_2,
+        self_id1: exp.output_self_id1.innerHTML,
+        self_id2: exp.output_self_id2.innerHTML,
+        self_id3: exp.output_self_id3.innerHTML,
+        trial_time_minutes: (exp.endID - exp.startID) / 60000
+      }
     }
+
   });
 
 
@@ -645,6 +665,7 @@ function make_slides(f) {
     start: function() {
       exp.data = {
         "trials": exp.data_trials,
+        "id_data": exp.id_data,
         "system": exp.system,
         "subject_information": exp.subj_data,
         "time_in_minutes": (Date.now() - exp.startT) / 60000
