@@ -1,0 +1,849 @@
+---
+title: "04_pilot_id_analysis"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(lme4)
+source("helpers.R")
+library(languageR)
+library(lmerTest)
+library(wesanderson)
+cbPalette <- c("#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
+```
+
+Set the background to be white instead of gray.
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+theme_set(theme_minimal())
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+d <- read.csv("../../data/04_pilot_id/04_pilot_id_2-merged.csv")
+summary(d)
+#View(d)
+```
+
+Exclude participants based on first language:
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+lang_exclude = d %>%
+  select(workerid, subject_information.language) %>%
+  filter(str_detect(subject_information.language,regex("english", ignore_case=TRUE),negate=TRUE)) %>%
+  filter(str_detect(subject_information.language,regex("englishg", ignore_case=TRUE),negate=TRUE)) %>%
+  filter(str_detect(subject_information.language,regex("engligh", ignore_case=TRUE),negate=TRUE)) %>%
+  filter(str_detect(subject_information.language,regex("en", ignore_case=TRUE),negate=TRUE)) %>%
+  filter(str_detect(subject_information.language,regex("englih", ignore_case=TRUE),negate=TRUE)) %>%
+  filter(str_detect(subject_information.language,regex("englis", ignore_case=TRUE),negate=TRUE)) %>%
+  filter(str_detect(subject_information.language,regex("englush", ignore_case=TRUE),negate=TRUE)) %>%
+  filter(str_detect(subject_information.language,regex("engrish", ignore_case=TRUE),negate=TRUE)) %>%
+  filter(str_detect(subject_information.language,regex("inglish", ignore_case=TRUE),negate=TRUE)) %>%
+  select(workerid, subject_information.language)
+d_english_1 = d[!(d$workerid %in% lang_exclude$workerid),]
+#View(d_english_1)
+```
+
+Exclude participants based on browser:
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+browser_exclude = d_english_1 %>%
+  select(workerid, system.Browser) %>%
+  filter(str_detect(system.Browser,regex("safari", ignore_case=TRUE),negate=TRUE)) %>%
+  select(workerid, system.Browser)
+d_browser_2 = d_english_1[(d_english_1$workerid %in% browser_exclude$workerid),]
+#View(d_browser_2)
+```
+
+Exclude participants based on confusion (yes/no):
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+confusion_yes_no_exclude = d_browser_2 %>%
+  select(workerid, subject_information.asses) %>%
+  filter(str_detect(subject_information.asses,regex("no", ignore_case=TRUE),negate=TRUE)) %>%
+  select(workerid, subject_information.asses)
+d_confusion_3 = d_browser_2[(d_browser_2$workerid %in% confusion_yes_no_exclude$workerid),]
+#View(d_confusion_3)
+```
+
+Exclude participants based on confusion (comments):
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+confusion_comments_exclude = d_confusion_3 %>%
+  select(workerid, subject_information.comments) %>%
+  filter(str_detect(subject_information.comments,regex("Ridiculous questions, I could see no logic to, nor how one could actually answer them", ignore_case=TRUE),negate=TRUE)) %>%
+  filter(str_detect(subject_information.comments,regex("I didn't get it", ignore_case=TRUE),negate=TRUE)) %>%
+  filter(str_detect(subject_information.comments,regex("Honestly I was a bit confused by all of it", ignore_case=TRUE),negate=TRUE)) %>%
+  filter(str_detect(subject_information.comments,regex("The questions did not make sense", ignore_case=TRUE),negate=TRUE)) %>%
+  select(workerid, subject_information.comments)
+d_confusion_3_1 = d_confusion_3[(d_confusion_3$workerid %in% confusion_comments_exclude$workerid),]
+#View(d_confusion_3_1)
+```
+The above seems to remove 40 rows, and so may be removing 5, rather than 4, participants' responses.
+
+Isolate only critical trials:
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+d_crit_trials_4 = d_confusion_3_1 %>%
+  filter(trial_type=="crit")
+#View(d_crit_trials_4)
+```
+
+Change 'maximum' and 'minimum' columns to 'numeric' from 'factor' data type:
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+d_crit_trials_4$maximum <- as.character(d_crit_trials_4$maximum)
+d_crit_trials_4$maximum <- as.numeric(d_crit_trials_4$maximum)
+
+d_crit_trials_4$minimum <- as.character(d_crit_trials_4$minimum)
+d_crit_trials_4$minimum <- as.numeric(d_crit_trials_4$minimum)
+#View(d_crit_trials_4)
+```
+
+Add new column: range widths (maximum minus minimum):
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+d_range_width_5 = d_crit_trials_4 %>%
+  mutate(range.width = maximum - minimum)
+#View(d_range_width_5)
+```
+
+
+
+Create a subset dataframe with maximum, minimum, and range, for manual examination:
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+range_check <- subset(d_range_width_5, select=c("workerid", "character_type", "item", "maximum", "minimum", "range.width"))
+#View(range_check)
+```
+
+Subset of participants with questionable trials:
+
+range_problems = d_range_width_5 %>%
+  select(workerid, character_type, item, maximum, minimum, range.width) %>%
+  filter(str_detect(workerid,regex("708", ignore_case=TRUE),negate=TRUE)) %>%
+  filter(str_detect(workerid,regex("666", ignore_case=TRUE),negate=TRUE)) %>%
+  filter(str_detect(workerid,regex("819", ignore_case=TRUE),negate=TRUE)) %>%
+  filter(str_detect(workerid,regex("874", ignore_case=TRUE),negate=TRUE)) %>%
+  filter(str_detect(workerid,regex("672", ignore_case=TRUE),negate=TRUE)) %>%
+  filter(str_detect(workerid,regex("612", ignore_case=TRUE),negate=TRUE)) %>%
+  filter(str_detect(workerid,regex("936", ignore_case=TRUE),negate=TRUE)) %>%
+  filter(str_detect(workerid,regex("693", ignore_case=TRUE),negate=TRUE)) %>%
+  filter(str_detect(workerid,regex("926", ignore_case=TRUE),negate=TRUE)) %>%
+  filter(str_detect(workerid,regex("836", ignore_case=TRUE),negate=TRUE)) %>%
+  filter(str_detect(workerid,regex("636", ignore_case=TRUE),negate=TRUE)) %>%
+  filter(str_detect(workerid,regex("807", ignore_case=TRUE),negate=TRUE)) %>%
+  filter(str_detect(workerid,regex("938", ignore_case=TRUE),negate=TRUE)) %>%
+  filter(str_detect(workerid,regex("605", ignore_case=TRUE),negate=TRUE)) %>%
+select(workerid, character_type, item, maximum, minimum, range.width)
+
+Note that the above *excludes* the given workerids; the below includes them:
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+range_problems <- filter(range_check, workerid %in% c('708', '666', '819', '874', '672', '612', '936', '693', '926', '836', '636', '807', '938', '605'))
+#View(range_problems)
+```
+Will leave these in for now; will need to revisit later.
+
+View results grouped by nerd vs hippie trials:
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+character_type.dist = d_range_width_5 %>%
+  group_by(character_type) %>% 
+  summarize(avg_range = mean(range.width), CI.Low = ci.low(range.width), CI.High = ci.high(range.width)) %>%
+  mutate(YMin = avg_range - CI.Low, YMax = avg_range + CI.High)
+dodge = position_dodge(.90)
+axis_order = c("nerd", "hippie")
+
+ggplot(character_type.dist, aes(x=factor(character_type, levels = axis_order), y=avg_range, fill=character_type)) +
+  geom_bar(stat="identity", position=dodge) +
+  geom_errorbar(aes(ymin=YMin, ymax=YMax) ,position=dodge, width=.25) +
+  scale_x_discrete(labels=c("nerd" = "Nerd Characters", "hippie" = "Hippie Characters")) +
+  labs(x="Character Type", y="Average Range Width") +
+  theme(legend.position = "none") +
+  scale_fill_manual(values=cbPalette)
+```
+
+View results grouped by high- vs low-stakes trials:
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+stakes.dist = d_range_width_5 %>%
+  group_by(stakes) %>% 
+  summarize(avg_range = mean(range.width), CI.Low = ci.low(range.width), CI.High = ci.high(range.width)) %>%
+  mutate(YMin = avg_range - CI.Low, YMax = avg_range + CI.High)
+dodge = position_dodge(.90)
+axis_order = c("low", "high")
+
+ggplot(stakes.dist, aes(x=factor(stakes, levels = axis_order), y=avg_range, fill=stakes)) +
+  geom_bar(stat="identity", position=dodge) +
+  geom_errorbar(aes(ymin=YMin, ymax=YMax) ,position=dodge, width=.25) +
+  scale_x_discrete(labels=c("low" = "Low Stakes", "high" = "High Stakes")) +
+  labs(x="Stakes Condition", y="Average Range Width") +
+  theme(legend.position = "none") +
+  scale_fill_manual(values=cbPalette)
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+d_self_id_columns_6 <- d_range_width_5 %>% 
+  mutate(nerd_self = case_when(
+    id_data.char_group1 == "nerd" ~ as.numeric(id_data.self_id1),
+    id_data.char_group2 == "nerd" ~ as.numeric(id_data.self_id2),
+    id_data.char_group3 == "nerd" ~ as.numeric(id_data.self_id3),
+    TRUE ~ 0
+  )) %>% 
+  mutate(hippie_self = case_when(
+    id_data.char_group1 == "hippie" ~ as.numeric(id_data.self_id1),
+    id_data.char_group2 == "hippie" ~ as.numeric(id_data.self_id2),
+    id_data.char_group3 == "hippie" ~ as.numeric(id_data.self_id3),
+    TRUE ~ 0
+  )) %>%
+  mutate(filler_self = case_when(
+    id_data.char_group1 == "filler" ~ as.numeric(id_data.self_id1),
+    id_data.char_group2 == "filler" ~ as.numeric(id_data.self_id2),
+    id_data.char_group3 == "filler" ~ as.numeric(id_data.self_id3),
+    TRUE ~ 0
+  ))
+#View(d_self_id_columns_6)
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+d_self_id_columns_6 %>% 
+  filter(hippie_self == 0 | nerd_self == 0 | filler_self == 0)
+```
+
+Divide up data by nerd or hippie in main trials:
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+abbrev.dist <- subset(d_self_id_columns_6, select=c("workerid", "character_type", "range.width", "nerd_self", "hippie_self", "filler_self"))
+#View(abbrev.dist)
+
+nerd.dist = abbrev.dist %>%
+  filter(character_type=="nerd")
+#View(nerd.dist)
+
+hippie.dist = abbrev.dist %>%
+  filter(character_type=="hippie")
+#View(hippie.dist)
+```
+
+View results for nerd trials, and by identification with the nerds:
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+nerd_self.dist = nerd.dist %>%
+  group_by(nerd_self) %>% 
+  summarize(avg_range = mean(range.width), CI.Low = ci.low(range.width), CI.High = ci.high(range.width)) %>%
+  mutate(YMin = avg_range - CI.Low, YMax = avg_range + CI.High)
+dodge = position_dodge(.90)
+axis_order = c("1", "2", "3", "4", "5", "6", "7")
+
+ggplot(nerd_self.dist, aes(x=factor(nerd_self, levels = axis_order), y=avg_range, fill=as.character(nerd_self))) +
+  geom_bar(stat="identity", position=dodge) +
+  geom_errorbar(aes(ymin=YMin, ymax=YMax) ,position=dodge, width=.25) +
+  scale_x_discrete(labels=c("1" = "1", "2" = "2", "3" = "3", "4" = "4", "5" = "5", "6" = "6", "7" = "7")) +
+  labs(x="Self-identification with nerdiness", y="Average Range Width, nerd trials") +
+  theme(legend.position = "none") +
+  scale_fill_manual(values=cbPalette)
+```
+
+View results for hippie trials, and by identification with the hippies:
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+hippie_self.dist = hippie.dist %>%
+  group_by(hippie_self) %>% 
+  summarize(avg_range = mean(range.width), CI.Low = ci.low(range.width), CI.High = ci.high(range.width)) %>%
+  mutate(YMin = avg_range - CI.Low, YMax = avg_range + CI.High)
+dodge = position_dodge(.90)
+axis_order = c("1", "2", "3", "4", "5", "6", "7")
+
+ggplot(hippie_self.dist, aes(x=factor(hippie_self, levels = axis_order), y=avg_range, fill=as.character(hippie_self))) +
+  geom_bar(stat="identity", position=dodge) +
+  geom_errorbar(aes(ymin=YMin, ymax=YMax) ,position=dodge, width=.25) +
+  scale_x_discrete(labels=c("1" = "1", "2" = "2", "3" = "3", "4" = "4", "5" = "5", "6" = "6", "7" = "7")) +
+  labs(x="Self-identification with hippiness", y="Average Range Width, hippie trials") +
+  theme(legend.position = "none") +
+  scale_fill_manual(values=cbPalette)
+```
+
+View results for nerd vs hippie trials, for all trials self-identifying with the relevant group with a score of 5, 6, or 7:
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+strong_id.dist = d_self_id_columns_6 %>%
+  filter((character_type == 'nerd' & nerd_self >= 5) | (character_type == 'hippie' & hippie_self >= 5))
+#View(strong_id.dist)
+
+strong_id_avg_range.dist = strong_id.dist %>%
+  group_by(character_type) %>% 
+  summarize(avg_range = mean(range.width), CI.Low = ci.low(range.width), CI.High = ci.high(range.width)) %>%
+  mutate(YMin = avg_range - CI.Low, YMax = avg_range + CI.High)
+dodge = position_dodge(.90)
+axis_order = c("nerd", "hippie")
+
+ggplot(strong_id_avg_range.dist, aes(x=factor(character_type, levels = axis_order), y=avg_range, fill=character_type)) +
+  geom_bar(stat="identity", position=dodge) +
+  geom_errorbar(aes(ymin=YMin, ymax=YMax) ,position=dodge, width=.25) +
+  scale_x_discrete(labels=c("nerd" = "Nerd Characters, nerd self-id 5 or greater", "hippie" = "Hippie Characters, hippie self-id 5 or greater")) +
+  labs(x="Character Type", y="Average Range Width") +
+  theme(legend.position = "none") +
+  scale_fill_manual(values=cbPalette)
+```
+
+View results for nerd vs hippie trials, for all trials self-identifying with the relevant group with a score of 1, 2, or 3:
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+weak_id.dist = d_self_id_columns_6 %>%
+  filter((character_type == 'nerd' & nerd_self <= 3) | (character_type == 'hippie' & hippie_self <= 3))
+#View(weak_id.dist)
+
+weak_id_avg_range.dist = weak_id.dist %>%
+  group_by(character_type) %>% 
+  summarize(avg_range = mean(range.width), CI.Low = ci.low(range.width), CI.High = ci.high(range.width)) %>%
+  mutate(YMin = avg_range - CI.Low, YMax = avg_range + CI.High)
+dodge = position_dodge(.90)
+axis_order = c("nerd", "hippie")
+
+ggplot(weak_id_avg_range.dist, aes(x=factor(character_type, levels = axis_order), y=avg_range, fill=character_type)) +
+  geom_bar(stat="identity", position=dodge) +
+  geom_errorbar(aes(ymin=YMin, ymax=YMax) ,position=dodge, width=.25) +
+  scale_x_discrete(labels=c("nerd" = "Nerd Characters, nerd self-id 3 or less", "hippie" = "Hippie Characters, hippie self-id 3 or less")) +
+  labs(x="Character Type", y="Average Range Width") +
+  theme(legend.position = "none") +
+  scale_fill_manual(values=cbPalette)
+```
+
+View results for nerd vs hippie trials, for all trials self-identifying with the CROSS group with a score of 5, 6, or 7:
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+cross_strong_id.dist = d_self_id_columns_6 %>%
+  filter((character_type == 'nerd' & hippie_self >= 5) | (character_type == 'hippie' & nerd_self >= 5))
+#View(cross_strong_id.dist)
+
+cross_strong_id_avg_range.dist = cross_strong_id.dist %>%
+  group_by(character_type) %>% 
+  summarize(avg_range = mean(range.width), CI.Low = ci.low(range.width), CI.High = ci.high(range.width)) %>%
+  mutate(YMin = avg_range - CI.Low, YMax = avg_range + CI.High)
+dodge = position_dodge(.90)
+axis_order = c("nerd", "hippie")
+
+ggplot(cross_strong_id_avg_range.dist, aes(x=factor(character_type, levels = axis_order), y=avg_range, fill=character_type)) +
+  geom_bar(stat="identity", position=dodge) +
+  geom_errorbar(aes(ymin=YMin, ymax=YMax) ,position=dodge, width=.25) +
+  scale_x_discrete(labels=c("nerd" = "Nerd Characters, hippie self-id 5 or greater", "hippie" = "Hippie Characters, nerd self-id 5 or greater")) +
+  labs(x="Character Type", y="Average Range Width") +
+  theme(legend.position = "none") +
+  scale_fill_manual(values=cbPalette)
+```
+
+View results for nerd vs hippie trials, for all trials self-identifying with the CROSS group with a score of 1, 2, or 3:
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+cross_weak_id.dist = d_self_id_columns_6 %>%
+  filter((character_type == 'nerd' & hippie_self <= 3) | (character_type == 'hippie' & nerd_self <= 3))
+#View(cross_weak_id.dist)
+
+cross_weak_id_avg_range.dist = cross_weak_id.dist %>%
+  group_by(character_type) %>% 
+  summarize(avg_range = mean(range.width), CI.Low = ci.low(range.width), CI.High = ci.high(range.width)) %>%
+  mutate(YMin = avg_range - CI.Low, YMax = avg_range + CI.High)
+dodge = position_dodge(.90)
+axis_order = c("nerd", "hippie")
+
+ggplot(cross_weak_id_avg_range.dist, aes(x=factor(character_type, levels = axis_order), y=avg_range, fill=character_type)) +
+  geom_bar(stat="identity", position=dodge) +
+  geom_errorbar(aes(ymin=YMin, ymax=YMax) ,position=dodge, width=.25) +
+  scale_x_discrete(labels=c("nerd" = "Nerd Characters, hippie self-id 3 or less", "hippie" = "Hippie Characters, nerd self-id 3 or less")) +
+  labs(x="Character Type", y="Average Range Width") +
+  theme(legend.position = "none") +
+  scale_fill_manual(values=cbPalette)
+```
+
+View results for nerd vs hippie trials, for all trials self-identifying with the relevant group with a score of 5, 6, or 7 and a self-identification with the CROSS group of 1, 2, or 3:
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+strong_id_weak_cross_id.dist = d_self_id_columns_6 %>%
+  filter((character_type == 'nerd' & nerd_self >= 5 & hippie_self <= 3) | (character_type == 'hippie' & hippie_self >= 5 & nerd_self <= 3))
+#View(strong_id_weak_cross_id.dist)
+
+strong_id_weak_cross_id_avg_range.dist = strong_id_weak_cross_id.dist %>%
+  group_by(character_type) %>% 
+  summarize(avg_range = mean(range.width), CI.Low = ci.low(range.width), CI.High = ci.high(range.width)) %>%
+  mutate(YMin = avg_range - CI.Low, YMax = avg_range + CI.High)
+dodge = position_dodge(.90)
+axis_order = c("nerd", "hippie")
+
+ggplot(strong_id_weak_cross_id_avg_range.dist, aes(x=factor(character_type, levels = axis_order), y=avg_range, fill=character_type)) +
+  geom_bar(stat="identity", position=dodge) +
+  geom_errorbar(aes(ymin=YMin, ymax=YMax) ,position=dodge, width=.25) +
+  scale_x_discrete(labels=c("nerd" = "Nerd Characters, nerd self-id > 4, hippie self-id < 4", "hippie" = "Hippie Characters, hippie self-id >4, nerd self-id < 4")) +
+  labs(x="Character Type", y="Average Range Width") +
+  theme(legend.position = "none") +
+  scale_fill_manual(values=cbPalette)
+```
+
+The fixed-effects model for character type--range width:
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+m_char_type_fixed_rwidth = glm(range.width ~ character_type, data=d_self_id_columns_6)
+summary(m_char_type_fixed_rwidth)
+```
+
+The fixed-effects model for stakes--range width:
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+m_stakes_fixed_rwidth = glm(range.width ~ stakes, data=d_self_id_columns_6)
+summary(m_stakes_fixed_rwidth)
+```
+
+The fixed-effects model, no interaction--range width:
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+m_fixed_effects_rwidth = glm(range.width ~ character_type + stakes, data=d_self_id_columns_6)
+summary(m_fixed_effects_rwidth)
+```
+
+The fixed-effects model, with interaction--range width:
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+m_fixed_effects_inter_rwidth = glm(range.width ~ character_type * stakes, data=d_self_id_columns_6)
+summary(m_fixed_effects_inter_rwidth)
+```
+
+The most complex(?) mixed-effects model--range width:
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+m_mixed_effects_complex_rwidth = glmer(range.width ~ character_type * stakes + nerd_self * hippie_self + (1+character_type|workerid) + (1+stakes|workerid) + (1|crit_trial_number) + (1|image1) + (1|image2) + (1+character_type|item) + (1|name1) + (1|name2) + (1|answerer.gender) + (1|questioner.gender) + (1|time) + (1|id_data.self_id_image1) + (1|id_data.self_id_image2) + (1|id_data.self_id_image3) + (1|id_data.self_id_image4) + (1|id_data.self_id_image5) + (1|id_data.self_id_image6) + (1|subject_information.gender), data=d_self_id_columns_6)
+summary(m_mixed_effects_complex_rwidth)
+```
+
+Dataset with range centers:
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+d_centers_7 = d_self_id_columns_6 %>%
+  mutate(range.center = maximum - (range.width/2))
+View(d_centers_7)
+```
+
+View results for range center, grouped by nerd vs. hippie trials:
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+center_by_character_type.dist = d_centers_7 %>%
+  group_by(character_type) %>% 
+  summarize(avg_range = mean(range.center), CI.Low = ci.low(range.center), CI.High = ci.high(range.center)) %>%
+  mutate(YMin = avg_range - CI.Low, YMax = avg_range + CI.High)
+dodge = position_dodge(.90)
+axis_order = c("nerd", "hippie")
+
+ggplot(center_by_character_type.dist, aes(x=factor(character_type, levels = axis_order), y=avg_range, fill=character_type)) +
+  geom_bar(stat="identity", position=dodge) +
+  geom_errorbar(aes(ymin=YMin, ymax=YMax) ,position=dodge, width=.25) +
+  scale_x_discrete(labels=c("nerd" = "Nerd Characters", "hippie" = "Hippie Characters")) +
+  labs(x="Character Type", y="Average Center Position") +
+  theme(legend.position = "none") +
+  scale_fill_manual(values=cbPalette)
+```
+
+View results for range center, grouped by stakes condition:
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+center_by_stakes.dist = d_centers_7 %>%
+  group_by(stakes) %>% 
+  summarize(avg_range = mean(range.center), CI.Low = ci.low(range.center), CI.High = ci.high(range.center)) %>%
+  mutate(YMin = avg_range - CI.Low, YMax = avg_range + CI.High)
+dodge = position_dodge(.90)
+axis_order = c("low", "high")
+
+ggplot(center_by_stakes.dist, aes(x=factor(stakes, levels = axis_order), y=avg_range, fill=stakes)) +
+  geom_bar(stat="identity", position=dodge) +
+  geom_errorbar(aes(ymin=YMin, ymax=YMax) ,position=dodge, width=.25) +
+  scale_x_discrete(labels=c("low" = "Low Stakes", "high" = "High Stakes")) +
+  labs(x="Stakes Condition", y="Average Center Position") +
+  theme(legend.position = "none") +
+  scale_fill_manual(values=cbPalette)
+```
+
+The fixed-effects model for character type--range center:
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+m_char_type_fixed_rcenter = glm(range.center ~ character_type, data=d_centers_7)
+summary(m_char_type_fixed_rcenter)
+```
+
+The fixed-effects model for stakes--range center:
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+m_stakes_fixed_rcenter = glm(range.center ~ stakes, data=d_centers_7)
+summary(m_stakes_fixed_rcenter)
+```
+
+The fixed-effects model, no interaction--range center:
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+m_fixed_effects_rcenter = glm(range.center ~ character_type + stakes, data=d_centers_7)
+summary(m_fixed_effects_rcenter)
+```
+
+The fixed-effects model, with interaction--range center:
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+m_fixed_effects_inter_rcenter = glm(range.center ~ character_type * stakes, data=d_centers_7)
+summary(m_fixed_effects_inter_rcenter)
+```
+
+The most complex(?) mixed-effects model--range center:
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+m_mixed_effects_complex_rcenter = glmer(range.center ~ character_type * stakes + nerd_self * hippie_self + (1+character_type|workerid) + (1+stakes|workerid) + (1|crit_trial_number) + (1|image1) + (1|image2) + (1+character_type|item) + (1|name1) + (1|name2) + (1|answerer.gender) + (1|questioner.gender) + (1|time) + (1|id_data.self_id_image1) + (1|id_data.self_id_image2) + (1|id_data.self_id_image3) + (1|id_data.self_id_image4) + (1|id_data.self_id_image5) + (1|id_data.self_id_image6) + (1|subject_information.gender), data=d_centers_7)
+summary(m_mixed_effects_complex_rcenter)
+```
+
+View results grouped by nerd vs hippie trials, by high vs low stakes:
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+character_type_stakes.dist = d_centers_7 %>%
+  group_by(character_type, stakes) %>% 
+  summarize(avg_range = mean(range.width), CI.Low = ci.low(range.width), CI.High = ci.high(range.width)) %>%
+  mutate(YMin = avg_range - CI.Low, YMax = avg_range + CI.High)
+dodge = position_dodge(.90)
+axis_order = c("nerd", "hippie")
+
+ggplot(character_type_stakes.dist, aes(x=factor(character_type, levels = axis_order), y=avg_range, fill=character_type)) +
+  geom_bar(stat="identity", position=dodge) +
+  geom_errorbar(aes(ymin=YMin, ymax=YMax) ,position=dodge, width=.25) +
+  scale_x_discrete(labels=c("nerd" = "Nerd Characters", "hippie" = "Hippie Characters")) +
+  labs(x="Character Type", y="Average Range Width") +
+  theme(legend.position = "none") +
+  scale_fill_manual(values=cbPalette) +
+  facet_wrap(~stakes)
+```
+
+Filter to keep only positive range widths:
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+d_pos_range_8 = d_centers_7 %>%
+  filter(range.width > 0)
+```
+
+Log transform range widths, new column:
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+d_log_range_9 = d_pos_range_8 %>%
+  mutate(log.range = log(range.width))
+```
+
+The fixed-effects model for character type--log-transformed range width:
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+m_char_type_fixed_log_rwidth = glm(log.range ~ character_type, data=d_log_range_9)
+summary(m_char_type_fixed_log_rwidth)
+```
+
+The fixed-effects model for stakes--log-transformed range width:
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+m_stakes_fixed_log_rwidth = glm(log.range ~ stakes, data=d_log_range_9)
+summary(m_stakes_fixed_log_rwidth)
+```
+
+The fixed-effects model, no interaction--log-transformed range width:
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+m_fixed_effects_log_rwidth = glm(log.range ~ character_type + stakes, data=d_log_range_9)
+summary(m_fixed_effects_log_rwidth)
+```
+
+The fixed-effects model, with interaction--log-transformed range width:
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+m_fixed_effects_inter_log_rwidth = glm(log.range ~ character_type * stakes, data=d_log_range_9)
+summary(m_fixed_effects_inter_log_rwidth)
+```
+
+The most complex(?) mixed-effects model--log-transformed range width:
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+m_mixed_effects_complex_log_rwidth = glmer(log.range ~ character_type * stakes + nerd_self * hippie_self + (1+character_type|workerid) + (1+stakes|workerid) + (1|crit_trial_number) + (1|image1) + (1|image2) + (1+character_type|item) + (1|name1) + (1|name2) + (1|answerer.gender) + (1|questioner.gender) + (1|time) + (1|id_data.self_id_image1) + (1|id_data.self_id_image2) + (1|id_data.self_id_image3) + (1|id_data.self_id_image4) + (1|id_data.self_id_image5) + (1|id_data.self_id_image6) + (1|subject_information.gender), data=d_log_range_9)
+summary(m_mixed_effects_complex_log_rwidth)
+```
+
+Even MORE complex mixed-effects model--log-transformed range width and with full fixed-effects interactions:
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+m_mixed_effects_complex_log_rwidth_full_inter = glmer(log.range ~ character_type * stakes * nerd_self * hippie_self + (1+character_type|workerid) + (1+stakes|workerid) + (1|crit_trial_number) + (1|image1) + (1|image2) + (1+character_type|item) + (1|name1) + (1|name2) + (1|answerer.gender) + (1|questioner.gender) + (1|time) + (1|id_data.self_id_image1) + (1|id_data.self_id_image2) + (1|id_data.self_id_image3) + (1|id_data.self_id_image4) + (1|id_data.self_id_image5) + (1|id_data.self_id_image6) + (1|subject_information.gender), data=d_log_range_9)
+summary(m_mixed_effects_complex_log_rwidth_full_inter)
+```
+
+The more complex mixed-effects model--log-transformed range width and with full fixed-effects interactions, nerd_self only:
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+m_mixed_effects_complex_log_rwidth_full_inter_n = glmer(log.range ~ character_type * stakes * nerd_self + (1+character_type|workerid) + (1+stakes|workerid) + (1|crit_trial_number) + (1|image1) + (1|image2) + (1+character_type|item) + (1|name1) + (1|name2) + (1|answerer.gender) + (1|questioner.gender) + (1|time) + (1|id_data.self_id_image1) + (1|id_data.self_id_image2) + (1|id_data.self_id_image3) + (1|id_data.self_id_image4) + (1|id_data.self_id_image5) + (1|id_data.self_id_image6) + (1|subject_information.gender), data=d_log_range_9)
+summary(m_mixed_effects_complex_log_rwidth_full_inter_n)
+```
+
+The more complex mixed-effects model--log-transformed range width and with full fixed-effects interactions, hippie_self only:
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+m_mixed_effects_complex_log_rwidth_full_inter_h = glmer(log.range ~ character_type * stakes * hippie_self + (1+character_type|workerid) + (1+stakes|workerid) + (1|crit_trial_number) + (1|image1) + (1|image2) + (1+character_type|item) + (1|name1) + (1|name2) + (1|answerer.gender) + (1|questioner.gender) + (1|time) + (1|id_data.self_id_image1) + (1|id_data.self_id_image2) + (1|id_data.self_id_image3) + (1|id_data.self_id_image4) + (1|id_data.self_id_image5) + (1|id_data.self_id_image6) + (1|subject_information.gender), data=d_log_range_9)
+summary(m_mixed_effects_complex_log_rwidth_full_inter_h)
+```
+
+Fixed effects with log-transformed range width and both self-id measures:
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+m_fixed_effects_inter_log_rwidth_n_h = glm(log.range ~ character_type * stakes * nerd_self * hippie_self, data=d_log_range_9)
+summary(m_fixed_effects_inter_log_rwidth_n_h)
+```
+
+Fixed effects with log-transformed range width and nerd_self only:
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+m_fixed_effects_inter_log_rwidth_n = glm(log.range ~ character_type * stakes * nerd_self, data=d_log_range_9)
+summary(m_fixed_effects_inter_log_rwidth_n)
+```
+
+Fixed effects with log-transformed range width and hippie_self only:
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+m_fixed_effects_inter_log_rwidth_h = glm(log.range ~ character_type * stakes * hippie_self, data=d_log_range_9)
+summary(m_fixed_effects_inter_log_rwidth_h)
+```
+
+Create a dataframe with only each participant's first trial:
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+d_first_trials_9_1 = d_log_range_9 %>%
+  filter(crit_trial_number == 1)
+```
+
+View results for nerd vs hippie trials, for all trials self-identifying with the relevant group with a score of 5, 6, or 7, for each participant's first trial only, using log ranges:
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+strong_id_first_trial.dist = d_first_trials_9_1 %>%
+  filter((character_type == 'nerd' & nerd_self >= 5) | (character_type == 'hippie' & hippie_self >= 5))
+#View(strong_id.dist)
+
+strong_id_first_trial_avg_range.dist = strong_id_first_trial.dist %>%
+  group_by(character_type) %>% 
+  summarize(avg_range = mean(log.range), CI.Low = ci.low(log.range), CI.High = ci.high(log.range)) %>%
+  mutate(YMin = avg_range - CI.Low, YMax = avg_range + CI.High)
+dodge = position_dodge(.90)
+axis_order = c("nerd", "hippie")
+
+ggplot(strong_id_first_trial_avg_range.dist, aes(x=factor(character_type, levels = axis_order), y=avg_range, fill=character_type)) +
+  geom_bar(stat="identity", position=dodge) +
+  geom_errorbar(aes(ymin=YMin, ymax=YMax) ,position=dodge, width=.25) +
+  scale_x_discrete(labels=c("nerd" = "Nerd Characters, nerd self-id 5 or greater", "hippie" = "Hippie Characters, hippie self-id 5 or greater")) +
+  labs(x="Character Type", y="Average Range Width") +
+  theme(legend.position = "none") +
+  scale_fill_manual(values=cbPalette)
+```
+
+The fixed-effects model, with interaction--log-transformed range width and first trials only, with no self-id:
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+m_fixed_effects_inter_log_rwidth_first_trials = glm(log.range ~ character_type * stakes, data=d_first_trials_9_1)
+summary(m_fixed_effects_inter_log_rwidth_first_trials)
+```
+
+The fixed-effects model, with interaction--log-transformed range width and first trials only, with both self-id measures:
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+m_fixed_effects_inter_log_rwidth_first_trials_n_h = glm(log.range ~ character_type * stakes * nerd_self * hippie_self, data=d_first_trials_9_1)
+summary(m_fixed_effects_inter_log_rwidth_first_trials_n_h)
+```
+
+Density of nerd_self responses:
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+nerd_self.dist = plot(density(d_log_range_9$nerd_self))
+summary(d_log_range_9$nerd_self)
+```
+
+Density of hippie_self responses:
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+hippie_self.dist = plot(density(d_log_range_9$hippie_self))
+summary(d_log_range_9$hippie_self)
+```
+
+View results for nerd vs hippie trials, for all trials self-identifying with the relevant group with a score of the median or above using log ranges:
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+strong_id_median.dist = d_log_range_9 %>%
+  filter((character_type == 'nerd' & nerd_self >= 3) | (character_type == 'hippie' & hippie_self >= 2))
+#View(strong_id_median.dist)
+
+strong_id_median_avg_range.dist = strong_id_median.dist %>%
+  group_by(character_type) %>% 
+  summarize(avg_range = mean(log.range), CI.Low = ci.low(log.range), CI.High = ci.high(log.range)) %>%
+  mutate(YMin = avg_range - CI.Low, YMax = avg_range + CI.High)
+dodge = position_dodge(.90)
+axis_order = c("nerd", "hippie")
+
+ggplot(strong_id_median_avg_range.dist, aes(x=factor(character_type, levels = axis_order), y=avg_range, fill=character_type)) +
+  geom_bar(stat="identity", position=dodge) +
+  geom_errorbar(aes(ymin=YMin, ymax=YMax) ,position=dodge, width=.25) +
+  scale_x_discrete(labels=c("nerd" = "Nerd Characters, nerd self-id 3 or greater", "hippie" = "Hippie Characters, hippie self-id 2 or greater")) +
+  labs(x="Character Type", y="Average Range Width") +
+  theme(legend.position = "none") +
+  scale_fill_manual(values=cbPalette)
+```
+
+View results for nerd vs hippie trials, for all trials self-identifying with the relevant group with a score above the median using log ranges:
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+strong_id_above_median.dist = d_log_range_9 %>%
+  filter((character_type == 'nerd' & nerd_self > 3) | (character_type == 'hippie' & hippie_self > 2))
+#View(strong_id_median.dist)
+
+strong_id_above_median_avg_range.dist = strong_id_above_median.dist %>%
+  group_by(character_type) %>% 
+  summarize(avg_range = mean(log.range), CI.Low = ci.low(log.range), CI.High = ci.high(log.range)) %>%
+  mutate(YMin = avg_range - CI.Low, YMax = avg_range + CI.High)
+dodge = position_dodge(.90)
+axis_order = c("nerd", "hippie")
+
+ggplot(strong_id_above_median_avg_range.dist, aes(x=factor(character_type, levels = axis_order), y=avg_range, fill=character_type)) +
+  geom_bar(stat="identity", position=dodge) +
+  geom_errorbar(aes(ymin=YMin, ymax=YMax) ,position=dodge, width=.25) +
+  scale_x_discrete(labels=c("nerd" = "Nerd Characters, nerd self-id greater than 3", "hippie" = "Hippie Characters, hippie self-id greater than 2")) +
+  labs(x="Character Type", y="Average Range Width") +
+  theme(legend.position = "none") +
+  scale_fill_manual(values=cbPalette)
+```
+
+Results with the workerids of participants who at any point gave a negative range width:
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+d_range_workerid_exclude_9_2 = d_log_range_9[!(d_log_range_9$workerid %in% range_problems$workerid),]
+View(d_range_workerid_exclude_9_2)
+```
+
+The 'even MORE' complex model, but without problem ranges and the participants who created them:
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+m_mixed_effects_complex_log_rwidth_full_inter_range_workerid_exclude = glmer(log.range ~ character_type * stakes * nerd_self * hippie_self + (1+character_type|workerid) + (1+stakes|workerid) + (1|crit_trial_number) + (1|image1) + (1|image2) + (1+character_type|item) + (1|name1) + (1|name2) + (1|answerer.gender) + (1|questioner.gender) + (1|time) + (1|id_data.self_id_image1) + (1|id_data.self_id_image2) + (1|id_data.self_id_image3) + (1|id_data.self_id_image4) + (1|id_data.self_id_image5) + (1|id_data.self_id_image6) + (1|subject_information.gender), data=d_range_workerid_exclude_9_2)
+summary(m_mixed_effects_complex_log_rwidth_full_inter_range_workerid_exclude)
+```
+
+NOTE: Keeping only range.width responses greater than 0 has resulted in quite a bit of data loss:
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+lost_rows = nrow(d_centers_7) - nrow(d_pos_range_8)
+lost_rows
+```
+149 lost rows of data in all, less 19 rows where range.width was negative, and we get 130 rows where range.width = 0
+
+*****************************************
+Inspecting BOTH experimental data sets together.
+
+Load in data from experiment 1:
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+d_exp1_1 <- read.csv("../../data/03_pilot/03_pilot-merged.csv")
+summary(d_exp1_1)
+#View(d_exp1_1)
+```
+
+Convert maximum and minimum columns to integer/numeric in d_exp1_1 in order to combine the two data frames:
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+d_exp1_1$maximum <- as.character(d_exp1_1$maximum)
+d_exp1_1$maximum <- as.numeric(d_exp1_1$maximum)
+
+d_exp1_1$minimum <- as.character(d_exp1_1$minimum)
+d_exp1_1$minimum <- as.numeric(d_exp1_1$minimum)
+```
+
+Add column for experiment number in experiment 1:
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+d_exp1_2 <- d_exp1_1 %>%
+  mutate(exp_num = 1)
+#View(d_exp1_2)
+```
+
+Add column for experiment number in experiment 2:
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+d_expnum_1 <- d %>%
+  mutate(exp_num = 2)
+#View(d_expnum_1)
+```
+
+Merge data from 04_pilot_id and 03_pilot:
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+d_two_exps_1 <- bind_rows(d_expnum_1, d_exp1_2)
+```
+
+Exclude participants based on first language:
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+lang_exclude_two_exps = d_two_exps_1 %>%
+  select(workerid, subject_information.language) %>%
+  filter(str_detect(subject_information.language,regex("english", ignore_case=TRUE),negate=TRUE)) %>%
+  filter(str_detect(subject_information.language,regex("englishg", ignore_case=TRUE),negate=TRUE)) %>%
+  filter(str_detect(subject_information.language,regex("engligh", ignore_case=TRUE),negate=TRUE)) %>%
+  filter(str_detect(subject_information.language,regex("en", ignore_case=TRUE),negate=TRUE)) %>%
+  filter(str_detect(subject_information.language,regex("englih", ignore_case=TRUE),negate=TRUE)) %>%
+  filter(str_detect(subject_information.language,regex("englis", ignore_case=TRUE),negate=TRUE)) %>%
+  filter(str_detect(subject_information.language,regex("englush", ignore_case=TRUE),negate=TRUE)) %>%
+  filter(str_detect(subject_information.language,regex("engrish", ignore_case=TRUE),negate=TRUE)) %>%
+  filter(str_detect(subject_information.language,regex("inglish", ignore_case=TRUE),negate=TRUE)) %>%
+  select(workerid, subject_information.language)
+d_two_exps_english_2 = d_two_exps_1[!(d_two_exps_1$workerid %in% lang_exclude_two_exps$workerid),]
+#View(d_two_exps_english_2)
+```
+
+Exclude participants based on browser:
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+browser_exclude_two_exps = d_two_exps_english_2 %>%
+  select(workerid, system.Browser) %>%
+  filter(str_detect(system.Browser,regex("safari", ignore_case=TRUE),negate=TRUE)) %>%
+  select(workerid, system.Browser)
+d_two_exps_browser_3 = d_two_exps_english_2[(d_two_exps_english_2$workerid %in% browser_exclude_two_exps$workerid),]
+#View(d_two_exps_browser_3)
+```
+
+Exclude participants based on confusion (yes/no):
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+confusion_yes_no_exclude_two_exps = d_two_exps_browser_3 %>%
+  select(workerid, subject_information.asses) %>%
+  filter(str_detect(subject_information.asses,regex("no", ignore_case=TRUE),negate=TRUE)) %>%
+  select(workerid, subject_information.asses)
+d_two_exps_confusion_4 = d_two_exps_browser_3[(d_two_exps_browser_3$workerid %in% confusion_yes_no_exclude_two_exps$workerid),]
+#View(d_two_exps_confusion_4)
+```
+
+Exclude participants based on confusion (comments):
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+confusion_comments_exclude_two_exps = d_two_exps_confusion_4 %>%
+  select(workerid, subject_information.comments) %>%
+  filter(str_detect(subject_information.comments,regex("Ridiculous questions, I could see no logic to, nor how one could actually answer them", ignore_case=TRUE),negate=TRUE)) %>%
+  filter(str_detect(subject_information.comments,regex("I didn't get it", ignore_case=TRUE),negate=TRUE)) %>%
+  filter(str_detect(subject_information.comments,regex("Honestly I was a bit confused by all of it", ignore_case=TRUE),negate=TRUE)) %>%
+  filter(str_detect(subject_information.comments,regex("The questions did not make sense", ignore_case=TRUE),negate=TRUE)) %>%
+  filter(str_detect(subject_information.comments,regex("I don't understand. Are we to assume they are lying? You look at your phone and the time is say 9:30. Time is time. What is the earliest time? 9:30 What is the latest time? 9:30. I must have really missed something?", ignore_case=TRUE),negate=TRUE)) %>%
+  select(workerid, subject_information.comments)
+d_two_exps_confusion_4_1 = d_two_exps_confusion_4[(d_two_exps_confusion_4$workerid %in% confusion_comments_exclude_two_exps$workerid),]
+#View(d_two_exps_confusion_4)
+```
+
+Isolate only critical trials:
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+d_two_exps_crit_trials_5 = d_two_exps_confusion_4_1 %>%
+  filter(trial_type=="crit")
+#View(d_crit_trials_4)
+```
+
+Add new column: range widths (maximum minus minimum):
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+d_two_exps_range_width_6 = d_two_exps_crit_trials_5 %>%
+  mutate(range.width = maximum - minimum)
+#View(d_range_width_two_exps_6)
+```
+
+Exclude negative range values:
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+d_two_exps_nonneg_range_7 = d_two_exps_range_width_6 %>%
+  filter(range.width >= 0)
+```
+
+View results grouped by nerd vs hippie trials, range width:
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+character_type_two_exps.dist = d_two_exps_nonneg_range_7 %>%
+  group_by(character_type) %>% 
+  summarize(avg_range = mean(range.width), CI.Low = ci.low(range.width), CI.High = ci.high(range.width)) %>%
+  mutate(YMin = avg_range - CI.Low, YMax = avg_range + CI.High)
+dodge = position_dodge(.90)
+axis_order = c("nerd", "hippie")
+
+ggplot(character_type_two_exps.dist, aes(x=factor(character_type, levels = axis_order), y=avg_range, fill=character_type)) +
+  geom_bar(stat="identity", position=dodge) +
+  geom_errorbar(aes(ymin=YMin, ymax=YMax) ,position=dodge, width=.25) +
+  scale_x_discrete(labels=c("nerd" = "Nerd Characters", "hippie" = "Hippie Characters")) +
+  labs(x="Character Type", y="Average Range Width") +
+  theme(legend.position = "none") +
+  scale_fill_manual(values=cbPalette)
+```
+
+View results grouped by high- vs low-stakes trials, range width:
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+stakes_two_exps.dist = d_two_exps_nonneg_range_7 %>%
+  group_by(stakes) %>% 
+  summarize(avg_range = mean(range.width), CI.Low = ci.low(range.width), CI.High = ci.high(range.width)) %>%
+  mutate(YMin = avg_range - CI.Low, YMax = avg_range + CI.High)
+dodge = position_dodge(.90)
+axis_order = c("low", "high")
+
+ggplot(stakes_two_exps.dist, aes(x=factor(stakes, levels = axis_order), y=avg_range, fill=stakes)) +
+  geom_bar(stat="identity", position=dodge) +
+  geom_errorbar(aes(ymin=YMin, ymax=YMax) ,position=dodge, width=.25) +
+  scale_x_discrete(labels=c("low" = "Low Stakes", "high" = "High Stakes")) +
+  labs(x="Stakes Condition", y="Average Range Width") +
+  theme(legend.position = "none") +
+  scale_fill_manual(values=cbPalette)
+```
+
+The fixed-effects model, with interaction--two experiments, range width:
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+m_fixed_effects_inter_two_exps = glm(range.width ~ character_type * stakes, data=d_two_exps_nonneg_range_7)
+summary(m_fixed_effects_inter_two_exps)
+```
+
+The 'more complex' (most most complex) mixed-effects model--with interactions--two experiments, range width:
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+m_mixed_effects_complex_two_exps = glmer(range.width ~ character_type * stakes + (1+character_type|workerid) + (1+stakes|workerid) + (1|crit_trial_number) + (1|image1) + (1|image2) + (1+character_type|item) + (1|name1) + (1|name2) + (1|answerer.gender) + (1|questioner.gender) + (1|time) + (1|subject_information.gender), data=d_two_exps_nonneg_range_7)
+summary(m_mixed_effects_complex_two_exps)
+```
+
+The 'more complex' (most most complex) mixed-effects model--with interactions--two experiments, range width, with experiment number as a random effect:
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+m_mixed_effects_complex_two_exps_expnumrandom = glmer(range.width ~ character_type * stakes + (1+character_type|workerid) + (1+stakes|workerid) + (1|crit_trial_number) + (1|image1) + (1|image2) + (1+character_type|item) + (1|name1) + (1|name2) + (1|answerer.gender) + (1|questioner.gender) + (1|time) + (1|subject_information.gender) + (1|exp_num), data=d_two_exps_nonneg_range_7)
+summary(m_mixed_effects_complex_two_exps_expnumrandom)
+```
+
+*****************************************
+
+
+

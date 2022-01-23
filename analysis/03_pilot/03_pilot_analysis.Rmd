@@ -111,3 +111,33 @@ ggplot(character_type.dist, aes(x=factor(character_type, levels = axis_order), y
   theme(legend.position = "none") +
   scale_fill_manual(values=cbPalette)
 ```
+
+View results grouped by high- vs low-stakes trials:
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+stakes.dist = d_range_width_5_1 %>%
+  group_by(stakes) %>% 
+  summarize(avg_range = mean(range.width), CI.Low = ci.low(range.width), CI.High = ci.high(range.width)) %>%
+  mutate(YMin = avg_range - CI.Low, YMax = avg_range + CI.High)
+dodge = position_dodge(.90)
+axis_order = c("low", "high")
+
+ggplot(stakes.dist, aes(x=factor(stakes, levels = axis_order), y=avg_range, fill=stakes)) +
+  geom_bar(stat="identity", position=dodge) +
+  geom_errorbar(aes(ymin=YMin, ymax=YMax) ,position=dodge, width=.25) +
+  scale_x_discrete(labels=c("low" = "Low Stakes", "high" = "High Stakes")) +
+  labs(x="Stakes Condition", y="Average Range Width") +
+  theme(legend.position = "none") +
+  scale_fill_manual(values=cbPalette)
+```
+
+The fixed-effects model, with interaction--range width:
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+m_fixed_effects_inter_03pilot = glm(range.width ~ character_type * stakes, data=d_range_width_5_1)
+summary(m_fixed_effects_inter_03pilot)
+```
+
+The 'more complex' (most most complex) mixed-effects model--with interactions--two experiments, range width:
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+m_mixed_effects_complex_03pilot = glmer(range.width ~ character_type * stakes + (1+character_type|workerid) + (1+stakes|workerid) + (1|crit_trial_number) + (1|image1) + (1|image2) + (1+character_type|item) + (1|name1) + (1|name2) + (1|answerer.gender) + (1|questioner.gender) + (1|time) + (1|subject_information.gender), data=d_range_width_5_1)
+summary(m_mixed_effects_complex_03pilot)
+```
