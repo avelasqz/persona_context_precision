@@ -60,11 +60,6 @@ function make_slides(f) {
       console.log("character type:", exp.char_type)
 
 
-      exp.training_trial_number = "NA"
-
-      exp.crit_trial_number = "NA"
-
-      exp.fill_trial_number = "NA"
       
       $('.white_box').html('<img src="images/white_box.png" style="width:260px">');
 
@@ -108,6 +103,10 @@ function make_slides(f) {
 
       $(".answer").html(exp.answer_bubble);
       console.log("answer:", exp.answer_bubble);
+
+      exp.time = "none";
+      exp.phone_time = "none";
+
 
       exp.image1 = exp.intro_image1;
       console.log("image 1:", exp.image1);
@@ -251,10 +250,6 @@ function make_slides(f) {
 
 
       exp.training_trial_number += 1
-
-      exp.crit_trial_number = "NA"
-
-      exp.fill_trial_number = "NA"
       
       $('.white_box').html('<img src="images/white_box.png" style="width:260px">');
 
@@ -298,6 +293,10 @@ function make_slides(f) {
 
       $(".answer").html(exp.answer_bubble);
       console.log("answer:", exp.answer_bubble);
+
+      exp.time = "none";
+      exp.phone_time = "none";
+
 
       exp.image1 = exp.training_image1;
       console.log("image 1:", exp.image1);
