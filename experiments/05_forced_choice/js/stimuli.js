@@ -1,3 +1,48 @@
+var intro_stim = 
+
+  [{
+    "type": "intro",
+    "item": "intro_slide",
+    "scenario": "It's Friday night, and Harper and Rowan are trying to find a restaurant to eat at.",
+    //Do any of those restaurants have tables available?
+    //Some do.
+    "prompt": "Which phone is Rowan looking at?"
+  }]
+
+var training_stims = 
+
+  [{
+    "type": "training",
+    "item": "training1",
+    "scenario": "It's Friday night, and person1 and person2 are trying to find a restaurant to eat at.",
+    //Do any of those restaurants have tables available?
+    //None of them do.
+    "prompt": "Which phone is person2 looking at?",
+    "message_left": "Are you sure?",
+    "message_right": "Good job!"
+  },
+  {
+    "type": "training",
+    "item": "training2",
+    "scenario": "It's Friday night, and person1 and person2 are trying to find a restaurant to eat at.",
+    //Do any of those restaurants have tables available?
+    //All of them do.
+    "prompt": "Which phone is person2 looking at?",
+    "message_left": "Good job!",
+    "message_right": "Are you sure?"
+  },
+  {
+    "type": "training",
+    "item": "training3",
+    "scenario": "It's Friday night, and person1 and person2 are trying to find a restaurant to eat at.",
+    //Do any of those restaurants have tables available?
+    //Some of them do.
+    "prompt": "Which phone is person2 looking at?",
+    "message_left": "Are you sure?",
+    "message_right": "Good job!"
+  }]
+
+
 var all_stims =
 
   [{

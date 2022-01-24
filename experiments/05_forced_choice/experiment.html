@@ -127,20 +127,32 @@
 
 
 
-
-
-    <!-- trial slide -->
-    <div class="slide" id="trial">
+    <!-- intro slide -->
+    <div class="slide" id="intro">
       <p style="text-align: left">
-        <br>
-        <br>
         <table class="sidebyside" id="stable">
           
+          <tr>
+            <td class="structureleft">
+              <div class="introtospeakers">
+                <strong>Here are the speakers:</strong>
+              </div>
+            </td>
+            <td>
+            </td>
+            <td class="structureright" colspan="2">
+              <div class="introtophones">
+                <strong>And here are the phone pictures:</strong>
+              </div>
+            </td>
+          </tr>
+
           <tr>
             <td class="structureleft" colspan="2">
               <div class="scenario"></div>
             </td>
-            <td>
+            <td class="structureright" colspan="2">
+              <div class="prompt"></div>
             </td>
             <td>
             </td>
@@ -153,8 +165,207 @@
             <td class="structureleft">
               <div class="answer"></div>
             </td>
+            <td>
+            </td>
+          </tr>
+          
+          <tr>
+            <td class="structureleft">
+              <div class="person1_pic"></div>
+            </td>
+            <td class="structureleft">
+              <div class="person2_pic"></div>
+            </td>
+            <td class="structureright">
+              <div class="white_box"></div>
+              <div class="phone"></div>
+            <td class="structureright">
+              <div class="phone_back"></div>
+            </td>
+          </tr>
+          
+          <tr>
+            <td class="center" colspan="4">
+              <button class="introbutton" onclick="_s.introbutton()">Click for the solution</button>
+              <br>
+              <div class="intromessage" colspan="4">
+                <i>Here, the screen shows that two of the restaurants have tables available; so, the screen <strong>fits</strong> what Rowan is saying. In your response, you would therefore select the picture with the visible screen.
+                  <br>
+                  <br>
+                  But if Rowan had said something like '<strong>They all have tables open</strong>,' you would instead have selected the picture of the phone that's turned over, since the information on the screen would not have fit what Rowan said.</i></div>
+            </td>
+            <td>
+            </td>
+            <td>
+            </td>
+            <td>
+            </td>
+            
+          </tr>
+
+          <tr>
+            <td class="center" colspan="4">
+              <button class="button" onclick="_s.button()">Click to start the experiment</button>
+            </td>
+            <td>
+            </td>
+            <td>
+            </td>
+            <td>
+            </td>
+          </tr>
+        </table>
+      </p>
+    </div>
+
+
+
+
+
+
+    <!-- interim1 slide -->
+    <div class="slide" id="interim1">
+      <p class="left">
+        <br>
+        <br>
+        On the next screen, you'll see questions about yourself with regard to some of the characters you have seen in the experiment.
+        <br>
+        <br>
+        <!-- The other person responds with information. -->
+        You can record your responses by moving the buttons along the sliders provided.
+      </p>
+      <div class="center">
+        <button id="continue_button" type="button" onclick="_s.button()">Continue</button>
+      </div>
+    </div>
+
+
+
+
+
+    <!-- training slide -->
+    <div class="slide" id="training">
+      <p style="text-align: left">
+        <table class="sidebyside" id="stable">
+          
+          <tr>
+            <td class="structureleft" colspan="2">
+              <div class="scenario"></div>
+            </td>
             <td class="structureright" colspan="2">
               <div class="prompt"></div>
+            </td>
+            <td>
+            </td>
+          </tr>
+          
+          <tr>
+            <td class="structureleft">
+              <div class="question"></div>
+            </td>
+            <td class="structureleft">
+              <div class="answer"></div>
+            </td>
+            <td>
+            </td>
+          </tr>
+          
+          <tr>
+            <td class="structureleft">
+              <div class="person1_pic"></div>
+            </td>
+            <td class="structureleft">
+              <div class="person2_pic"></div>
+            </td>
+            <td class="structureright">
+              <div class="white_box"></div>
+              <div class="phone" id="phone_training"></div>
+              <div class="phone_left_red"></div>
+            </td>
+            <td class="structureright">
+              <div class="phone_back" id="phone_back_training"></div>
+              <div class="phone_right_red"></div>
+          </tr>
+          
+          <tr>
+            <td>
+            </td>
+            <td>
+            </td>
+            <td class="center" colspan="2">
+              <br>
+              <div class="message_left" style="color:darkred;"></div>
+              <div class="message_right" style="color:darkred;"></div>
+            </td>
+            <td>
+            </td>
+
+          <tr>
+            <td>
+            </td>
+            <td>
+            </td>
+            <td class="center" colspan="2">
+              <button class="button" onclick="_s.button()">Continue</button>
+            </td>
+          </tr>
+        </table>
+      </p>
+    </div>
+
+
+
+
+
+
+    <!-- interim2 slide -->
+    <div class="slide" id="interim2">
+      <p class="left">
+        <br>
+        <br>
+        On the next screen, you'll see questions about yourself with regard to some of the characters you have seen in the experiment.
+        <br>
+        <br>
+        <!-- The other person responds with information. -->
+        You can record your responses by moving the buttons along the sliders provided.
+      </p>
+      <div class="center">
+        <button id="continue_button" type="button" onclick="_s.button()">Continue</button>
+      </div>
+    </div>
+
+
+
+
+
+
+
+    <!-- trial slide -->
+    <div class="slide" id="trial">
+      <p style="text-align: left">
+        <table class="sidebyside" id="stable">
+          
+          <tr>
+            <td class="structureleft" colspan="2">
+              <div class="scenario"></div>
+            </td>
+            <td class="structureright" colspan="2">
+              <div class="prompt"></div>
+            </td>
+            <td>
+            </td>
+          </tr>
+          
+          <tr>
+            <td class="structureleft">
+              <div class="question"></div>
+            </td>
+            <td class="structureleft">
+              <div class="answer"></div>
+            </td>
+            <td>
+            </td>
+            <td>
             </td>
           </tr>
           
@@ -188,8 +399,8 @@
 
 
 
-    <!-- interim slide -->
-    <div class="slide" id="interim">
+    <!-- interim3 slide -->
+    <div class="slide" id="interim3">
       <p class="left">
         <br>
         <br>
@@ -216,12 +427,10 @@
             <td class="structureleft">
               <div class="self_id1_char_1"></div>
               <div class="self_id2_char_1"></div>
-              <div class="self_id3_char_1"></div>
             </td>
             <td class="structureleft">
               <div class="self_id1_char_2"></div>
               <div class="self_id2_char_2"></div>
-              <div class="self_id3_char_2"></div>
             </td>
             <td class="structureright">
               <div class="white_box2"></div>
@@ -262,25 +471,6 @@
                   </datalist>
                   <p><span id="self_id2"></span></p>
                   <button class="button2" onclick="_s.button2()">Continue</button>
-              </div>
-              <div class="self_id3_prompt">
-                <p>
-                  On a scale from one to seven, 1 being the <b>least</b> and 7 being the <b>most</b>, how much do you feel you identify with these characters?
-                </p>
-              </div>
-              <div class="rangeslider">
-                  <input type="range" list="tickmarks3" min="1" max="7" value="4" class="slider2" id="self_id3_slider">
-                  <datalist class="tickmarks3">
-                  <option value="1">1</option>
-                  <option value="2">2</option>
-                  <option value="3">3</option>
-                  <option value="4">4</option>
-                  <option value="5">5</option>
-                  <option value="6">6</option>
-                  <option value="7">7</option>
-                  </datalist>
-                  <p><span id="self_id3"></span></p>
-                  <button class="button3" onclick="_s.button3()">Continue</button>
               </div>
             </td>
           </tr>
